@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+source ~/Projects/sigma-ai/.venv/bin/activate
+PYTHONPATH=src python -m sigma.cli.main "$@"

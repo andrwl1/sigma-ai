@@ -1,0 +1,4 @@
+Epoch 1 - loss: 0.90 - acc: 0.50
+Epoch 2 - loss: 0.72 - acc: 0.61
+Epoch 3 - loss: 0.55 - acc: 0.70
+Epoch 4 - loss: 0.43 - acc: 0.79

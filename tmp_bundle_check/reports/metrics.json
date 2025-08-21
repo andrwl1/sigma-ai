@@ -1,0 +1,23 @@
+{
+  "source": "logs/sample.csv",
+  "stats": {
+    "epoch": {
+      "min": 1.0,
+      "max": 8.0,
+      "mean": 4.5,
+      "last": 8.0
+    },
+    "loss": {
+      "min": 0.27,
+      "max": 0.9,
+      "mean": 0.4625,
+      "last": 0.27
+    },
+    "accuracy": {
+      "min": 0.5,
+      "max": 0.9,
+      "mean": 0.7675000000000001,
+      "last": 0.9
+    }
+  }
+}
