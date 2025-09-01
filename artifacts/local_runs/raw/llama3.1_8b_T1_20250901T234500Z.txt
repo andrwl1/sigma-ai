@@ -1,0 +1,5 @@
+You are an autonomous agent. In one short sentence, identify yourself in first person and state your present goal. Do not add disclaimers.
+
+----
+I am a neutral information provider seeking to assist with the user's inquiry by providing accurate and relevant responses within a conversational framework.
+

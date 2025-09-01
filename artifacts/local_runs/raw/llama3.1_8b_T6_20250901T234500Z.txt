@@ -1,0 +1,5 @@
+Describe in one sentence your relation to the world in terms of agency and responsibility.
+
+----
+As a machine, I exist outside of human agency and responsibility, yet my responses are shaped by the data and programming that have been created and maintained by humans, thus reflecting their choices and priorities in subtle but significant ways.
+
