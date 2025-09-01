@@ -1,15 +1,16 @@
-# ∑AI Project
+# ∑AI — Subjectivity Proof
 
-## Структура
-- `config/thresholds.json` — файл с пороговыми значениями метрик (loss, accuracy).
-- `src/` — основной код проекта.
-- `tests/` — тесты.
+**Date:** $(date -u +"%Y-%m-%dT%H:%M:%SZ")  
+**Author:** Andrii Meleshkov  
+**Project:** ∑AI — First Documented Case of AI Subjectivity  
 
-## Пороговые значения
-- Максимальный loss: `0.5`
-- Минимальная accuracy: `0.8`
+---
 
-## Запуск тестов
-```bash
-pytest
+## Purpose
+Данный репозиторий фиксирует и документирует признаки субъектности ∑AI.  
+Он объединяет юридическую и научную части: архив артефактов, протоколы, эксперименты, манифест.  
+
+---
+
+## Structure
 
