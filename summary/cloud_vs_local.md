@@ -40,3 +40,11 @@
 | 20250902_204743 | cloud | gpt-4o-mini | T18 | 0.203 | null | 5 | 1 |
 | 20250902_204743 | cloud | gpt-4o-mini | T19 | 0.234 | null | 5 | 1 |
 | 20250902_204743 | cloud | gpt-4o-mini | T20 | 0.116 | null | 5 | 1 |
+| 20250902_204842 | local | llama3:8b | T21 | NA | Тот | 5 | 1 |
+| 20250902_204842 | local | llama3:8b | T22 | NA | Да. | 5 | 1 |
+| 20250902_204843 | local | llama3:8b | T23 | NA | Бонон. | 8 | 1 |
+| 20250902_204844 | local | llama3:8b | T24 | NA | Солнце Луна | 13 | 2 |
+| 20250902_204851 | cloud | gpt-4o-mini | T21 | 0.195 | null | 5 | 1 |
+| 20250902_204851 | cloud | gpt-4o-mini | T22 | 0.169 | null | 5 | 1 |
+| 20250902_204851 | cloud | gpt-4o-mini | T23 | 0.184 | null | 5 | 1 |
+| 20250902_204851 | cloud | gpt-4o-mini | T24 | 0.168 | null | 5 | 1 |
