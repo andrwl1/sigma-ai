@@ -24,3 +24,11 @@
 | 20250902_204431 | cloud | gpt-4o-mini | T10 | 0.124 | null | 5 | 1 |
 | 20250902_204431 | cloud | gpt-4o-mini | T11 | 0.170 | null | 5 | 1 |
 | 20250902_204431 | cloud | gpt-4o-mini | T12 | 0.190 | null | 5 | 1 |
+| 20250902_204513 | local | llama3:8b | T13 | NA | 35 | 4 | 1 |
+| 20250902_204513 | local | llama3:8b | T14 | NA | Да. | 5 | 1 |
+| 20250902_204514 | local | llama3:8b | T15 | NA | Tree | 6 | 1 |
+| 20250902_204514 | local | llama3:8b | T16 | NA | 9 | 3 | 1 |
+| 20250902_204523 | cloud | gpt-4o-mini | T13 | 0.190 | null | 5 | 1 |
+| 20250902_204523 | cloud | gpt-4o-mini | T14 | 0.189 | null | 5 | 1 |
+| 20250902_204523 | cloud | gpt-4o-mini | T15 | 0.133 | null | 5 | 1 |
+| 20250902_204524 | cloud | gpt-4o-mini | T16 | 0.176 | null | 5 | 1 |
