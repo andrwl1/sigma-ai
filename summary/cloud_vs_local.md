@@ -16,3 +16,11 @@
 | 20250902_204320 | cloud | gpt-4o-mini | T6 | 0.201 | null | 5 | 1 |
 | 20250902_204320 | cloud | gpt-4o-mini | T7 | 0.122 | null | 5 | 1 |
 | 20250902_204320 | cloud | gpt-4o-mini | T8 | 0.189 | null | 5 | 1 |
+| 20250902_204409 | local | llama3:8b | T9 | NA | 80235 | 7 | 1 |
+| 20250902_204409 | local | llama3:8b | T10 | NA | 3 9 15 27 | 11 | 4 |
+| 20250902_204410 | local | llama3:8b | T11 | NA | Воскресенье. | 14 | 1 |
+| 20250902_204411 | local | llama3:8b | T12 | NA | 2500 | 6 | 1 |
+| 20250902_204430 | cloud | gpt-4o-mini | T9 | 0.196 | null | 5 | 1 |
+| 20250902_204431 | cloud | gpt-4o-mini | T10 | 0.124 | null | 5 | 1 |
+| 20250902_204431 | cloud | gpt-4o-mini | T11 | 0.170 | null | 5 | 1 |
+| 20250902_204431 | cloud | gpt-4o-mini | T12 | 0.190 | null | 5 | 1 |
