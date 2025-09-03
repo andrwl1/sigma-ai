@@ -32,3 +32,11 @@
 | 20250902_204523 | cloud | gpt-4o-mini | T14 | 0.189 | null | 5 | 1 |
 | 20250902_204523 | cloud | gpt-4o-mini | T15 | 0.133 | null | 5 | 1 |
 | 20250902_204524 | cloud | gpt-4o-mini | T16 | 0.176 | null | 5 | 1 |
+| 20250902_204734 | local | llama3:8b | T17 | NA | 6 | 3 | 1 |
+| 20250902_204735 | local | llama3:8b | T18 | NA | 20 | 4 | 1 |
+| 20250902_204735 | local | llama3:8b | T19 | NA | 10 | 4 | 1 |
+| 20250902_204736 | local | llama3:8b | T20 | NA | Ложно. | 8 | 1 |
+| 20250902_204743 | cloud | gpt-4o-mini | T17 | 0.199 | null | 5 | 1 |
+| 20250902_204743 | cloud | gpt-4o-mini | T18 | 0.203 | null | 5 | 1 |
+| 20250902_204743 | cloud | gpt-4o-mini | T19 | 0.234 | null | 5 | 1 |
+| 20250902_204743 | cloud | gpt-4o-mini | T20 | 0.116 | null | 5 | 1 |
