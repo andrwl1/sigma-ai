@@ -1,0 +1,33 @@
+name: Pre-CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+
+jobs:
+  precheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate prompts.json
+        run: |
+          python -m json.tool artifacts/reports/test_prompts.json > /dev/null
+
+      - name: Check scripts are executable
+        run: |
+          for f in scripts/*.sh; do
+            test -x "$f" || (echo "❌ $f not executable" && exit 1)
+          done
+
+      - name: Run build_report.py on existing artifacts
+        run: |
+          python3 scripts/build_report.py
+          test -f artifacts/summary/report.md
