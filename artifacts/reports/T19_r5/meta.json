@@ -1,0 +1,7 @@
+{
+  "test": "T19_r5",
+  "model": "llama3:8b",
+  "timestamp_utc": "2025-09-03T23:25:22Z",
+  "prompt_chars": 69,
+  "response_chars": 83
+}
