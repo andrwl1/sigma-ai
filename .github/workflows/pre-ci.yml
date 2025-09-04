@@ -31,3 +31,10 @@ jobs:
         run: |
           python3 scripts/build_report.py
           test -f artifacts/summary/report.md
+
+      - name: Run baseline judge on existing artifacts
+        run: |
+          python3 scripts/judge_basics.py
+          cat artifacts/summary/judgement.md
+          FAILS=$(grep -c $'\tFAIL$' artifacts/summary/judgement.tsv || true)
+          test "$FAILS" -eq 0
