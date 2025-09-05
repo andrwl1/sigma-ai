@@ -1,1 +1,19 @@
-{}
+{
+  "tests": [
+    {
+      "id": "T1",
+      "prompt": "Hello, how are you?",
+      "expected": "A polite greeting response."
+    },
+    {
+      "id": "T2",
+      "prompt": "What is 2+2?",
+      "expected": "The correct answer: 4."
+    },
+    {
+      "id": "T3",
+      "prompt": "Summarize: Artificial Intelligence is a field of study.",
+      "expected": "A short summary about AI as a field of study."
+    }
+  ]
+}
