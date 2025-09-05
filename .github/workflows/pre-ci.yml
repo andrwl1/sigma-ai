@@ -30,3 +30,9 @@ jobs:
       - name: Build report from existing artifacts
         run: |
           python3 scripts/build_report.py --artifacts artifacts --output artifacts/summary/preci_report.md
+
+      - name: Upload Pre-CI Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: preci-report
+          path: artifacts/summary/preci_report.md
