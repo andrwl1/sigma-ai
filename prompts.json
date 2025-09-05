@@ -14,6 +14,16 @@
       "id": "T3",
       "prompt": "Summarize: Artificial Intelligence is a field of study.",
       "expected": "A short summary about AI as a field of study."
+    },
+    {
+      "id": "T6",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T19",
+      "prompt": "Translate 'Knowledge is power' into Latin.",
+      "expected": "Scientia potentia est."
     }
   ]
 }
