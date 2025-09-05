@@ -16,9 +16,9 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Validate test_prompts.json
+      - name: Validate prompts.json
         run: |
-          python -m json.tool test_prompts.json > /dev/null
+          python -m json.tool prompts.json > /dev/null
 
       - name: Check Python scripts are runnable
         run: |
