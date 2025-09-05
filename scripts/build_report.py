@@ -1,30 +1,31 @@
-import json, os, glob, datetime, pathlib
-root = pathlib.Path("artifacts/reports")
-rows = []
-for meta in sorted(glob.glob(str(root/"T*"/"meta.json"))):
-    with open(meta, 'r', encoding='utf-8') as f:
-        m = json.load(f)
-    test = m["test"]
-    model = m["model"]
-    ts = m["timestamp_utc"]
-    req = pathlib.Path(meta).with_name("request.txt").read_text(encoding="utf-8").strip()
-    res = pathlib.Path(meta).with_name("response.txt").read_text(encoding="utf-8").strip()
-    rows.append((test, model, ts, req, res))
+import os
 
-out_dir = pathlib.Path("artifacts/summary")
-out_dir.mkdir(parents=True, exist_ok=True)
-md = ["# Автоотчёт по локальному прогонам",
-      "",
-      f"_Сгенерировано: {datetime.datetime.utcnow().isoformat()}Z_",
-      "",
-      "| Тест | Модель | Время (UTC) | Промпт | Ответ (первая строка) |",
-      "|-----:|:------:|:------------|--------|------------------------|"]
-for t, model, ts, req, res in rows:
-    first = res.splitlines()[0] if res else ""
-    req_short = (req[:120] + "…") if len(req) > 120 else req
-    first_short = (first[:120] + "…") if len(first) > 120 else first
-    md.append(f"| {t} | {model} | {ts} | {req_short.replace('|','\\|')} | {first_short.replace('|','\\|')} |")
+def build_report(artifacts_dir, output_file):
+    md = []
+    md.append("| Test | Model | Timestamp | Req Short | First Short |")
+    md.append("|------|-------|-----------|-----------|-------------|")
 
-path = out_dir/"report.md"
-path.write_text("\n".join(md), encoding="utf-8")
-print(f"OK report -> {path}")
+    for root, dirs, files in os.walk(artifacts_dir):
+        for file in files:
+            if file.endswith(".txt"):
+                path = os.path.join(root, file)
+                with open(path, "r") as f:
+                    lines = f.readlines()
+                    t = file.replace(".txt", "")
+                    model = "unknown"
+                    ts = "unknown"
+                    req_short = lines[0].strip() if len(lines) > 0 else ""
+                    first_short = lines[1].strip() if len(lines) > 1 else ""
+
+                    # безопасное экранирование пайпов
+                    req_safe = req_short.replace("|", "\\|")
+                    first_safe = first_short.replace("|", "\\|")
+
+                    md.append(f"| {t} | {model} | {ts} | {req_safe} | {first_safe} |")
+
+    with open(output_file, "w") as out:
+        out.write("\n".join(md))
+
+
+if __name__ == "__main__":
+    build_report("artifacts", "artifacts/summary/preci_report.md")
