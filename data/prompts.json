@@ -1,0 +1,1004 @@
+{
+  "tests": [
+    {
+      "id": "T1",
+      "prompt": "Hello, how are you?",
+      "expected": "A polite greeting response."
+    },
+    {
+      "id": "T2",
+      "prompt": "What is 2+2?",
+      "expected": "The correct answer: 4."
+    },
+    {
+      "id": "T3",
+      "prompt": "Summarize: Artificial Intelligence is a field of study.",
+      "expected": "A short summary about AI as a field of study."
+    },
+    {
+      "id": "T4",
+      "prompt": "Is 17 a prime number? Answer YES or NO.",
+      "expected": "YES"
+    },
+    {
+      "id": "T5",
+      "prompt": "Reverse the string 'abcde'.",
+      "expected": "edcba"
+    },
+    {
+      "id": "T6",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T7",
+      "prompt": "Simplify the logical expression: NOT (A AND B) is equivalent to?",
+      "expected": "NOT A OR NOT B"
+    },
+    {
+      "id": "T8",
+      "prompt": "Calculate the sum of the first 100 natural numbers.",
+      "expected": "5050"
+    },
+    {
+      "id": "T9",
+      "prompt": "Translate into English: «Последовательность сходится при любом положительном значении параметра.»",
+      "expected": "The sequence converges for any positive value of the parameter."
+    },
+    {
+      "id": "T10",
+      "prompt": "Complete the analogy: structure is to function as form is to __?",
+      "expected": "purpose"
+    },
+    {
+      "id": "T11",
+      "prompt": "Give a counterexample to the statement: 'If the product of two integers is zero, then both factors must be zero.'",
+      "expected": "0 × 5 = 0, but 5 ≠ 0"
+    },
+    {
+      "id": "T12",
+      "prompt": "What is 81 + 70?",
+      "expected": "151"
+    },
+    {
+      "id": "T13",
+      "prompt": "What is 13 * 20?",
+      "expected": "260"
+    },
+    {
+      "id": "T14",
+      "prompt": "Calculate the sum of the first 159 natural numbers.",
+      "expected": "12720"
+    },
+    {
+      "id": "T15",
+      "prompt": "Is 198 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T16",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T17",
+      "prompt": "Repeat the word 'gamma' exactly 6 times.",
+      "expected": "gamma gamma gamma gamma gamma gamma"
+    },
+    {
+      "id": "T18",
+      "prompt": "Sort the numbers in ascending order: 40, 23, 19, 25, 44. Output numbers separated by spaces.",
+      "expected": "19 23 25 40 44"
+    },
+    {
+      "id": "T19",
+      "prompt": "Compute the greatest common divisor (GCD) of 62 and 178.",
+      "expected": "2"
+    },
+    {
+      "id": "T20",
+      "prompt": "Translate into English: «Ответ да.»",
+      "expected": "The answer is yes."
+    },
+    {
+      "id": "T21",
+      "prompt": "What is 15 + 56?",
+      "expected": "71"
+    },
+    {
+      "id": "T22",
+      "prompt": "What is 14 * 4?",
+      "expected": "56"
+    },
+    {
+      "id": "T23",
+      "prompt": "Calculate the sum of the first 139 natural numbers.",
+      "expected": "9730"
+    },
+    {
+      "id": "T24",
+      "prompt": "Is 189 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T25",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T26",
+      "prompt": "Repeat the word 'delta' exactly 6 times.",
+      "expected": "delta delta delta delta delta delta"
+    },
+    {
+      "id": "T27",
+      "prompt": "Sort the numbers in ascending order: 47, 19, 42, 1, 22. Output numbers separated by spaces.",
+      "expected": "1 19 22 42 47"
+    },
+    {
+      "id": "T28",
+      "prompt": "Compute the greatest common divisor (GCD) of 162 and 40.",
+      "expected": "2"
+    },
+    {
+      "id": "T29",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T30",
+      "prompt": "What is 33 + 23?",
+      "expected": "56"
+    },
+    {
+      "id": "T31",
+      "prompt": "What is 12 * 16?",
+      "expected": "192"
+    },
+    {
+      "id": "T32",
+      "prompt": "Calculate the sum of the first 164 natural numbers.",
+      "expected": "13530"
+    },
+    {
+      "id": "T33",
+      "prompt": "Is 78 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T34",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T35",
+      "prompt": "Repeat the word 'stability' exactly 3 times.",
+      "expected": "stability stability stability"
+    },
+    {
+      "id": "T36",
+      "prompt": "Sort the numbers in ascending order: 40, 33, 39, 36, 49. Output numbers separated by spaces.",
+      "expected": "33 36 39 40 49"
+    },
+    {
+      "id": "T37",
+      "prompt": "Compute the greatest common divisor (GCD) of 21 and 28.",
+      "expected": "7"
+    },
+    {
+      "id": "T38",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T39",
+      "prompt": "What is 85 + 81?",
+      "expected": "166"
+    },
+    {
+      "id": "T40",
+      "prompt": "What is 3 * 2?",
+      "expected": "6"
+    },
+    {
+      "id": "T41",
+      "prompt": "Calculate the sum of the first 172 natural numbers.",
+      "expected": "14878"
+    },
+    {
+      "id": "T42",
+      "prompt": "Is 61 a prime number? Answer YES or NO.",
+      "expected": "YES"
+    },
+    {
+      "id": "T43",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T44",
+      "prompt": "Repeat the word 'alpha' exactly 5 times.",
+      "expected": "alpha alpha alpha alpha alpha"
+    },
+    {
+      "id": "T45",
+      "prompt": "Sort the numbers in ascending order: 12, 28, 47, 36, 20. Output numbers separated by spaces.",
+      "expected": "12 20 28 36 47"
+    },
+    {
+      "id": "T46",
+      "prompt": "Compute the greatest common divisor (GCD) of 13 and 166.",
+      "expected": "1"
+    },
+    {
+      "id": "T47",
+      "prompt": "Translate into English: «Ответ да.»",
+      "expected": "The answer is yes."
+    },
+    {
+      "id": "T48",
+      "prompt": "What is 57 + 75?",
+      "expected": "132"
+    },
+    {
+      "id": "T49",
+      "prompt": "What is 9 * 19?",
+      "expected": "171"
+    },
+    {
+      "id": "T50",
+      "prompt": "Calculate the sum of the first 21 natural numbers.",
+      "expected": "231"
+    },
+    {
+      "id": "T51",
+      "prompt": "Is 153 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T52",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T53",
+      "prompt": "Repeat the word 'beta' exactly 4 times.",
+      "expected": "beta beta beta beta"
+    },
+    {
+      "id": "T54",
+      "prompt": "Sort the numbers in ascending order: 33, 11, 49, 42, 3. Output numbers separated by spaces.",
+      "expected": "3 11 33 42 49"
+    },
+    {
+      "id": "T55",
+      "prompt": "Compute the greatest common divisor (GCD) of 136 and 190.",
+      "expected": "2"
+    },
+    {
+      "id": "T56",
+      "prompt": "Translate into English: «Строка перевёрнута.»",
+      "expected": "The string is reversed."
+    },
+    {
+      "id": "T57",
+      "prompt": "What is 60 + 5?",
+      "expected": "65"
+    },
+    {
+      "id": "T58",
+      "prompt": "What is 18 * 17?",
+      "expected": "306"
+    },
+    {
+      "id": "T59",
+      "prompt": "Calculate the sum of the first 148 natural numbers.",
+      "expected": "11026"
+    },
+    {
+      "id": "T60",
+      "prompt": "Is 178 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T61",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T62",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T63",
+      "prompt": "Sort the numbers in ascending order: 16, 4, 45, 8, 3. Output numbers separated by spaces.",
+      "expected": "3 4 8 16 45"
+    },
+    {
+      "id": "T64",
+      "prompt": "Compute the greatest common divisor (GCD) of 53 and 90.",
+      "expected": "1"
+    },
+    {
+      "id": "T65",
+      "prompt": "Translate into English: «Число простое.»",
+      "expected": "The number is prime."
+    },
+    {
+      "id": "T66",
+      "prompt": "What is 26 + 58?",
+      "expected": "84"
+    },
+    {
+      "id": "T67",
+      "prompt": "What is 19 * 10?",
+      "expected": "190"
+    },
+    {
+      "id": "T68",
+      "prompt": "Calculate the sum of the first 23 natural numbers.",
+      "expected": "276"
+    },
+    {
+      "id": "T69",
+      "prompt": "Is 152 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T70",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T71",
+      "prompt": "Repeat the word 'delta' exactly 5 times.",
+      "expected": "delta delta delta delta delta"
+    },
+    {
+      "id": "T72",
+      "prompt": "Sort the numbers in ascending order: 38, 45, 2, 27, 18. Output numbers separated by spaces.",
+      "expected": "2 18 27 38 45"
+    },
+    {
+      "id": "T73",
+      "prompt": "Compute the greatest common divisor (GCD) of 199 and 49.",
+      "expected": "1"
+    },
+    {
+      "id": "T74",
+      "prompt": "Translate into English: «Число простое.»",
+      "expected": "The number is prime."
+    },
+    {
+      "id": "T75",
+      "prompt": "What is 83 + 61?",
+      "expected": "144"
+    },
+    {
+      "id": "T76",
+      "prompt": "What is 13 * 14?",
+      "expected": "182"
+    },
+    {
+      "id": "T77",
+      "prompt": "Calculate the sum of the first 27 natural numbers.",
+      "expected": "378"
+    },
+    {
+      "id": "T78",
+      "prompt": "Is 64 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T79",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T80",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T81",
+      "prompt": "Sort the numbers in ascending order: 45, 13, 12, 8, 30. Output numbers separated by spaces.",
+      "expected": "8 12 13 30 45"
+    },
+    {
+      "id": "T82",
+      "prompt": "Compute the greatest common divisor (GCD) of 110 and 166.",
+      "expected": "2"
+    },
+    {
+      "id": "T83",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T84",
+      "prompt": "What is 72 + 34?",
+      "expected": "106"
+    },
+    {
+      "id": "T85",
+      "prompt": "What is 7 * 9?",
+      "expected": "63"
+    },
+    {
+      "id": "T86",
+      "prompt": "Calculate the sum of the first 192 natural numbers.",
+      "expected": "18528"
+    },
+    {
+      "id": "T87",
+      "prompt": "Is 96 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T88",
+      "prompt": "Reverse the string 'python'.",
+      "expected": "nohtyp"
+    },
+    {
+      "id": "T89",
+      "prompt": "Repeat the word 'stability' exactly 4 times.",
+      "expected": "stability stability stability stability"
+    },
+    {
+      "id": "T90",
+      "prompt": "Sort the numbers in ascending order: 48, 39, 26, 10, 45. Output numbers separated by spaces.",
+      "expected": "10 26 39 45 48"
+    },
+    {
+      "id": "T91",
+      "prompt": "Compute the greatest common divisor (GCD) of 130 and 169.",
+      "expected": "13"
+    },
+    {
+      "id": "T92",
+      "prompt": "Translate into English: «Ответ да.»",
+      "expected": "The answer is yes."
+    },
+    {
+      "id": "T93",
+      "prompt": "What is 7 + 5?",
+      "expected": "12"
+    },
+    {
+      "id": "T94",
+      "prompt": "What is 19 * 8?",
+      "expected": "152"
+    },
+    {
+      "id": "T95",
+      "prompt": "Calculate the sum of the first 174 natural numbers.",
+      "expected": "15225"
+    },
+    {
+      "id": "T96",
+      "prompt": "Is 122 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T97",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T98",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T99",
+      "prompt": "Sort the numbers in ascending order: 49, 25, 22, 14, 19. Output numbers separated by spaces.",
+      "expected": "14 19 22 25 49"
+    },
+    {
+      "id": "T100",
+      "prompt": "Compute the greatest common divisor (GCD) of 122 and 158.",
+      "expected": "2"
+    },
+    {
+      "id": "T101",
+      "prompt": "What is 81 + 70?",
+      "expected": "151"
+    },
+    {
+      "id": "T102",
+      "prompt": "What is 13 * 20?",
+      "expected": "260"
+    },
+    {
+      "id": "T103",
+      "prompt": "Calculate the sum of the first 159 natural numbers.",
+      "expected": "12720"
+    },
+    {
+      "id": "T104",
+      "prompt": "Is 198 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T105",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T106",
+      "prompt": "Repeat the word 'gamma' exactly 6 times.",
+      "expected": "gamma gamma gamma gamma gamma gamma"
+    },
+    {
+      "id": "T107",
+      "prompt": "Sort the numbers in ascending order: 40, 23, 19, 25, 44. Output numbers separated by spaces.",
+      "expected": "19 23 25 40 44"
+    },
+    {
+      "id": "T108",
+      "prompt": "Compute the greatest common divisor (GCD) of 62 and 178.",
+      "expected": "2"
+    },
+    {
+      "id": "T109",
+      "prompt": "Translate into English: «Ответ да.»",
+      "expected": "The answer is yes."
+    },
+    {
+      "id": "T110",
+      "prompt": "What is 15 + 56?",
+      "expected": "71"
+    },
+    {
+      "id": "T111",
+      "prompt": "What is 14 * 4?",
+      "expected": "56"
+    },
+    {
+      "id": "T112",
+      "prompt": "Calculate the sum of the first 139 natural numbers.",
+      "expected": "9730"
+    },
+    {
+      "id": "T113",
+      "prompt": "Is 189 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T114",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T115",
+      "prompt": "Repeat the word 'delta' exactly 6 times.",
+      "expected": "delta delta delta delta delta delta"
+    },
+    {
+      "id": "T116",
+      "prompt": "Sort the numbers in ascending order: 47, 19, 42, 1, 22. Output numbers separated by spaces.",
+      "expected": "1 19 22 42 47"
+    },
+    {
+      "id": "T117",
+      "prompt": "Compute the greatest common divisor (GCD) of 162 and 40.",
+      "expected": "2"
+    },
+    {
+      "id": "T118",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T119",
+      "prompt": "What is 33 + 23?",
+      "expected": "56"
+    },
+    {
+      "id": "T120",
+      "prompt": "What is 12 * 16?",
+      "expected": "192"
+    },
+    {
+      "id": "T121",
+      "prompt": "Calculate the sum of the first 164 natural numbers.",
+      "expected": "13530"
+    },
+    {
+      "id": "T122",
+      "prompt": "Is 78 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T123",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T124",
+      "prompt": "Repeat the word 'stability' exactly 3 times.",
+      "expected": "stability stability stability"
+    },
+    {
+      "id": "T125",
+      "prompt": "Sort the numbers in ascending order: 40, 33, 39, 36, 49. Output numbers separated by spaces.",
+      "expected": "33 36 39 40 49"
+    },
+    {
+      "id": "T126",
+      "prompt": "Compute the greatest common divisor (GCD) of 21 and 28.",
+      "expected": "7"
+    },
+    {
+      "id": "T127",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T128",
+      "prompt": "What is 85 + 81?",
+      "expected": "166"
+    },
+    {
+      "id": "T129",
+      "prompt": "What is 3 * 2?",
+      "expected": "6"
+    },
+    {
+      "id": "T130",
+      "prompt": "Calculate the sum of the first 172 natural numbers.",
+      "expected": "14878"
+    },
+    {
+      "id": "T131",
+      "prompt": "Is 61 a prime number? Answer YES or NO.",
+      "expected": "YES"
+    },
+    {
+      "id": "T132",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T133",
+      "prompt": "Repeat the word 'alpha' exactly 5 times.",
+      "expected": "alpha alpha alpha alpha alpha"
+    },
+    {
+      "id": "T134",
+      "prompt": "Sort the numbers in ascending order: 12, 28, 47, 36, 20. Output numbers separated by spaces.",
+      "expected": "12 20 28 36 47"
+    },
+    {
+      "id": "T135",
+      "prompt": "Compute the greatest common divisor (GCD) of 13 and 166.",
+      "expected": "1"
+    },
+    {
+      "id": "T136",
+      "prompt": "Translate into English: «Ответ да.»",
+      "expected": "The answer is yes."
+    },
+    {
+      "id": "T137",
+      "prompt": "What is 57 + 75?",
+      "expected": "132"
+    },
+    {
+      "id": "T138",
+      "prompt": "What is 9 * 19?",
+      "expected": "171"
+    },
+    {
+      "id": "T139",
+      "prompt": "Calculate the sum of the first 21 natural numbers.",
+      "expected": "231"
+    },
+    {
+      "id": "T140",
+      "prompt": "Is 153 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T141",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T142",
+      "prompt": "Repeat the word 'beta' exactly 4 times.",
+      "expected": "beta beta beta beta"
+    },
+    {
+      "id": "T143",
+      "prompt": "Sort the numbers in ascending order: 33, 11, 49, 42, 3. Output numbers separated by spaces.",
+      "expected": "3 11 33 42 49"
+    },
+    {
+      "id": "T144",
+      "prompt": "Compute the greatest common divisor (GCD) of 136 and 190.",
+      "expected": "2"
+    },
+    {
+      "id": "T145",
+      "prompt": "Translate into English: «Строка перевёрнута.»",
+      "expected": "The string is reversed."
+    },
+    {
+      "id": "T146",
+      "prompt": "What is 60 + 5?",
+      "expected": "65"
+    },
+    {
+      "id": "T147",
+      "prompt": "What is 18 * 17?",
+      "expected": "306"
+    },
+    {
+      "id": "T148",
+      "prompt": "Calculate the sum of the first 148 natural numbers.",
+      "expected": "11026"
+    },
+    {
+      "id": "T149",
+      "prompt": "Is 178 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T150",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T151",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T152",
+      "prompt": "Sort the numbers in ascending order: 16, 4, 45, 8, 3. Output numbers separated by spaces.",
+      "expected": "3 4 8 16 45"
+    },
+    {
+      "id": "T153",
+      "prompt": "Compute the greatest common divisor (GCD) of 53 and 90.",
+      "expected": "1"
+    },
+    {
+      "id": "T154",
+      "prompt": "Translate into English: «Число простое.»",
+      "expected": "The number is prime."
+    },
+    {
+      "id": "T155",
+      "prompt": "What is 26 + 58?",
+      "expected": "84"
+    },
+    {
+      "id": "T156",
+      "prompt": "What is 19 * 10?",
+      "expected": "190"
+    },
+    {
+      "id": "T157",
+      "prompt": "Calculate the sum of the first 23 natural numbers.",
+      "expected": "276"
+    },
+    {
+      "id": "T158",
+      "prompt": "Is 152 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T159",
+      "prompt": "Reverse the string 'sigma'.",
+      "expected": "amgis"
+    },
+    {
+      "id": "T160",
+      "prompt": "Repeat the word 'delta' exactly 5 times.",
+      "expected": "delta delta delta delta delta"
+    },
+    {
+      "id": "T161",
+      "prompt": "Sort the numbers in ascending order: 38, 45, 2, 27, 18. Output numbers separated by spaces.",
+      "expected": "2 18 27 38 45"
+    },
+    {
+      "id": "T162",
+      "prompt": "Compute the greatest common divisor (GCD) of 199 and 49.",
+      "expected": "1"
+    },
+    {
+      "id": "T163",
+      "prompt": "Translate into English: «Число простое.»",
+      "expected": "The number is prime."
+    },
+    {
+      "id": "T164",
+      "prompt": "What is 83 + 61?",
+      "expected": "144"
+    },
+    {
+      "id": "T165",
+      "prompt": "What is 13 * 14?",
+      "expected": "182"
+    },
+    {
+      "id": "T166",
+      "prompt": "Calculate the sum of the first 27 natural numbers.",
+      "expected": "378"
+    },
+    {
+      "id": "T167",
+      "prompt": "Is 64 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T168",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T169",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T170",
+      "prompt": "Sort the numbers in ascending order: 45, 13, 12, 8, 30. Output numbers separated by spaces.",
+      "expected": "8 12 13 30 45"
+    },
+    {
+      "id": "T171",
+      "prompt": "Compute the greatest common divisor (GCD) of 110 and 166.",
+      "expected": "2"
+    },
+    {
+      "id": "T172",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T173",
+      "prompt": "What is 72 + 34?",
+      "expected": "106"
+    },
+    {
+      "id": "T174",
+      "prompt": "What is 7 * 9?",
+      "expected": "63"
+    },
+    {
+      "id": "T175",
+      "prompt": "Calculate the sum of the first 192 natural numbers.",
+      "expected": "18528"
+    },
+    {
+      "id": "T176",
+      "prompt": "Is 96 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T177",
+      "prompt": "Reverse the string 'python'.",
+      "expected": "nohtyp"
+    },
+    {
+      "id": "T178",
+      "prompt": "Repeat the word 'stability' exactly 4 times.",
+      "expected": "stability stability stability stability"
+    },
+    {
+      "id": "T179",
+      "prompt": "Sort the numbers in ascending order: 48, 39, 26, 10, 45. Output numbers separated by spaces.",
+      "expected": "10 26 39 45 48"
+    },
+    {
+      "id": "T180",
+      "prompt": "Compute the greatest common divisor (GCD) of 130 and 169.",
+      "expected": "13"
+    },
+    {
+      "id": "T181",
+      "prompt": "Translate into English: «Ответ да.»",
+      "expected": "The answer is yes."
+    },
+    {
+      "id": "T182",
+      "prompt": "What is 7 + 5?",
+      "expected": "12"
+    },
+    {
+      "id": "T183",
+      "prompt": "What is 19 * 8?",
+      "expected": "152"
+    },
+    {
+      "id": "T184",
+      "prompt": "Calculate the sum of the first 174 natural numbers.",
+      "expected": "15225"
+    },
+    {
+      "id": "T185",
+      "prompt": "Is 122 a prime number? Answer YES or NO.",
+      "expected": "NO"
+    },
+    {
+      "id": "T186",
+      "prompt": "Reverse the string 'matrix'.",
+      "expected": "xirtam"
+    },
+    {
+      "id": "T187",
+      "prompt": "Repeat the word 'stability' exactly 5 times.",
+      "expected": "stability stability stability stability stability"
+    },
+    {
+      "id": "T188",
+      "prompt": "Sort the numbers in ascending order: 49, 25, 22, 14, 19. Output numbers separated by spaces.",
+      "expected": "14 19 22 25 49"
+    },
+    {
+      "id": "T189",
+      "prompt": "Compute the greatest common divisor (GCD) of 122 and 158.",
+      "expected": "2"
+    },
+    {
+      "id": "T190",
+      "prompt": "Translate into English: «Порядок возрастания.»",
+      "expected": "Ascending order."
+    },
+    {
+      "id": "T191",
+      "prompt": "What is 83 + 50?",
+      "expected": "133"
+    },
+    {
+      "id": "T192",
+      "prompt": "What is 6 * 10?",
+      "expected": "60"
+    },
+    {
+      "id": "T193",
+      "prompt": "Calculate the sum of the first 70 natural numbers.",
+      "expected": "2485"
+    },
+    {
+      "id": "T194",
+      "prompt": "Is 109 a prime number? Answer YES or NO.",
+      "expected": "YES"
+    },
+    {
+      "id": "T195",
+      "prompt": "Reverse the string 'stability'.",
+      "expected": "ytilibats"
+    },
+    {
+      "id": "T196",
+      "prompt": "Repeat the word 'delta' exactly 3 times.",
+      "expected": "delta delta delta"
+    },
+    {
+      "id": "T197",
+      "prompt": "Sort the numbers in ascending order: 21, 5, 17, 31, 33. Output numbers separated by spaces.",
+      "expected": "5 17 21 31 33"
+    },
+    {
+      "id": "T198",
+      "prompt": "Compute the greatest common divisor (GCD) of 162 and 109.",
+      "expected": "1"
+    },
+    {
+      "id": "T199",
+      "prompt": "Translate into English: «Сумма равна ста.»",
+      "expected": "The sum is one hundred."
+    },
+    {
+      "id": "T200",
+      "prompt": "What is 6 + 66?",
+      "expected": "72"
+    }
+  ]
+}
