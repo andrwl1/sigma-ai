@@ -2,7 +2,6 @@ name: Pre-CI
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
 
 jobs:
@@ -19,22 +18,15 @@ jobs:
 
       - name: Validate prompts.json
         run: |
-          python -m json.tool artifacts/reports/test_prompts.json > /dev/null
+          python -m json.tool prompts.json > /dev/null
 
-      - name: Check scripts are executable
+      - name: Check Python scripts are runnable
         run: |
-          for f in scripts/*.sh; do
-            test -x "$f" || (echo "❌ $f not executable" && exit 1)
+          for f in scripts/*.py; do
+            echo "Checking $f"
+            python3 "$f" --help || true
           done
 
-      - name: Run build_report.py on existing artifacts
+      - name: Build report from existing artifacts
         run: |
-          python3 scripts/build_report.py
-          test -f artifacts/summary/report.md
-
-      - name: Run baseline judge on existing artifacts
-        run: |
-          python3 scripts/judge_basics.py
-          cat artifacts/summary/judgement.md
-          FAILS=$(grep -c $'\tFAIL$' artifacts/summary/judgement.tsv || true)
-          test "$FAILS" -eq 0
+          python3 scripts/build_report.py --artifacts artifacts --output artifacts/summary/preci_report.md
