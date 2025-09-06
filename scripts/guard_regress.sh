@@ -1,41 +1,37 @@
 #!/usr/bin/env bash
 # Regression guard: compares current (local) run with the last successful Pre-CI run (cloud).
-# Exits with non-zero code if any differences found.
-
+# Fails CI if:
+#  - cloud artifacts differ from local (case/answer or verdict diff), or
+#  - cloud pass_rate < local pass_rate - 2pp.
 set -euo pipefail
 
 echo "== guard_regress =="
-echo "runner: $(uname -a)"
 command -v gh >/dev/null 2>&1 || { echo "gh CLI is required"; exit 1; }
 
 # --- Paths --------------------------------------------------------------------
 mkdir -p artifacts/local artifacts/cloud artifacts/summary
 
 # --- Prepare local -------------------------------------------------------------
-# If current run already produced a summary, reuse it; otherwise create a stub so scripts don't crash.
 echo "== Prepare local =="
 if [[ -f artifacts/summary/judgement.tsv ]]; then
   cp artifacts/summary/judgement.tsv artifacts/local/judgement.tsv
   [[ -f artifacts/summary/stability.tsv ]] && cp artifacts/summary/stability.tsv artifacts/local/stability.tsv || true
   echo "✔ local saved"
 else
-  # minimal header for pandas
-  echo -e "test\tverdict\n" > artifacts/local/judgement.tsv
-  echo -e "tick\tstatus\n"   > artifacts/local/stability.tsv
+  # заглушки, чтобы скрипты не падали
+  printf "test\tverdict\n" > artifacts/local/judgement.tsv
+  printf "tick\tstatus\n"   > artifacts/local/stability.tsv
   echo "⚠ artifacts/summary/judgement.tsv не найден — создана заглушка"
 fi
 
 # --- Fetch cloud artifact ------------------------------------------------------
 echo "== Fetch cloud artifact =="
-
-# Require token only for download; if нет — мягко выходим (не ломаем весь job)
 if [[ -z "${GH_TOKEN:-}" ]]; then
   echo "GH_TOKEN is not set — skipping cloud diff (allowing pipeline to pass)"
   exit 0
 fi
 export GH_TOKEN
 
-# Find last successful Pre-CI run on this branch, excluding the current SHA (если доступен)
 BRANCH="${GITHUB_REF_NAME:-master}"
 CURRENT_SHA="${GITHUB_SHA:-}"
 
@@ -58,12 +54,10 @@ if [[ -z "${LAST_OK_RUN_ID}" ]]; then
 fi
 
 echo "using run ${LAST_OK_RUN_ID} for artifacts"
-
-# Download only our artifact (what we publish in Pre-CI)
-# Name must match the artifacts upload step in your workflow.
+# имя артефакта должно совпадать с upload-artifact в workflow
 gh run download "${LAST_OK_RUN_ID}" --name "preci-report" --dir artifacts/summary
 
-# Sanity check
+# sanity check
 ls -lh artifacts/summary || true
 [[ -f artifacts/summary/judgement.tsv ]] || {
   echo "no judgement.tsv inside artifact — skipping regression guard"
@@ -83,6 +77,21 @@ python scripts/ab_diff.py
 # --- Check regressions ---------------------------------------------------------
 echo "== Check regressions =="
 DIFF_FILE="artifacts/summary/ab_diff.md"
+
+# threshold guard: cloud must not be worse than local by more than 2pp
+python - <<'PY'
+import re, sys, pathlib
+p=pathlib.Path("artifacts/summary/ab_report.md").read_text()
+def get(name):
+    m=re.search(rf"{name}\s+pass = ([0-9.]+)", p)
+    return float(m.group(1)) if m else None
+pl, pc = get("local"), get("cloud")
+if pl is not None and pc is not None:
+    if pc < pl - 0.02:
+        print(f"❌ Threshold fail: cloud worse by {pl-pc:.3f} (>2pp)")
+        sys.exit(1)
+print("✅ Threshold OK")
+PY
 
 if [[ ! -f "${DIFF_FILE}" ]]; then
   echo "no ${DIFF_FILE} — nothing to compare, skipping"
