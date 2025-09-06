@@ -1,43 +1,54 @@
 name: Pre-CI
+
 on:
   pull_request:
   push:
     branches: [ master ]
+
 permissions:
   contents: read
   actions: read
   checks: read
+
 concurrency:
   group: pre-ci-${{ github.ref }}
   cancel-in-progress: true
+
 env:
   THRESHOLD_PP_2: ${{ vars.THRESHOLD_PP_2 || 2 }}
   GUARD_SOURCE_BRANCH: ${{ vars.GUARD_SOURCE_BRANCH || 'master' }}
   GUARD_WORKFLOW: ${{ vars.GUARD_WORKFLOW || 'Pre-CI' }}
+
 jobs:
   guard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: 'pip'
+
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt || true
-          pip install pytest
+          pip install pytest pandas matplotlib
+
       - name: Run tests
         run: make test
+
       - name: Regression guard
         env:
           CI_EVENT_NAME: ${{ github.event_name }}
           SOFT_MODE: ${{ github.event_name == 'pull_request' }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make guard
+
       - name: Plot trend
         run: make report
+
       - name: Upload artifact preci-report
         uses: actions/upload-artifact@v4
         with:
