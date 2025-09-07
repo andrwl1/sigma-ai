@@ -1,59 +1,64 @@
 name: Pre-CI
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+  push:
+    branches: [ master ]
 
 permissions:
   contents: read
   actions: read
+  checks: read
+
+concurrency:
+  group: pre-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  THRESHOLD_PP_2: ${{ vars.THRESHOLD_PP_2 || 2 }}
+  GUARD_SOURCE_BRANCH: ${{ vars.GUARD_SOURCE_BRANCH || 'master' }}
+  GUARD_WORKFLOW: ${{ vars.GUARD_WORKFLOW || 'Pre-CI' }}
 
 jobs:
-  build:
+  guard:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.12'
+          cache: 'pip'
 
-      - name: Install dependencies
+      - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install pytest requests pandas
+          pip install -r requirements.txt || true
+          pip install pytest pandas matplotlib
 
       - name: Run tests
-        run: pytest -q
+        run: pytest -q --junitxml=report.xml
 
-      # Готовим папку с отчетами; если файлы не созданы тестами — создаём заглушки,
-      # чтобы upload-artifact всегда находил, что упаковать.
-      - name: Prepare artifact folder (preci-report)
-        run: |
-          mkdir -p artifacts/summary
-          [[ -f artifacts/summary/judgement.tsv ]] || printf "test\tverdict\n" > artifacts/summary/judgement.tsv
-          [[ -f artifacts/summary/stability.tsv ]] || printf "metric\tvalue\n" > artifacts/summary/stability.tsv
+      - name: Regression guard
+        env:
+          CI_EVENT_NAME: ${{ github.event_name }}
+          SOFT_MODE: ${{ github.event_name == 'pull_request' }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make guard
 
-      # Публикуем артефакт, который guard_regress подтянет в следующих прогонах
-      - name: Upload regression artifacts
+      - name: Plot trend
+        run: make report
+
+      - name: Diagnostics
+        run: python3 scripts/stability_report.py
+
+      - name: Upload artifact preci-report
         uses: actions/upload-artifact@v4
         with:
           name: preci-report
-          path: artifacts/summary/
+          path: |
+            artifacts/summary/**
+            report.xml
+            ab_report.md
           if-no-files-found: warn
           retention-days: 7
-
-      - name: Make guard script executable
-        run: chmod +x scripts/guard_regress.sh
-
-      - name: Run regression guard
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: ./scripts/guard_regress.sh
