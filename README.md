@@ -1,3 +1,4 @@
+![Pre-CI](https://github.com/andrwl1/sigma-ai/actions/workflows/pre-ci.yml/badge.svg)
 # ∑AI — Cloud vs Local Proof (T1–T24)
 
 ## Цель
