@@ -1,38 +1,61 @@
 name: Pre-CI
 
 on:
-  push:
   pull_request:
+  push:
+    branches: [ master ]
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+concurrency:
+  group: pre-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  THRESHOLD_PP: 2
+  GUARD_SOURCE_BRANCH: ${{ vars.GUARD_SOURCE_BRANCH || 'master' }}
+  GUARD_WORKFLOW: ${{ vars.GUARD_WORKFLOW || 'Pre-CI' }}
 
 jobs:
-  precheck:
+  guard:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.12'
+          cache: 'pip'
 
-      - name: Validate prompts.json
+      - name: Install deps
         run: |
-          python -m json.tool prompts.json > /dev/null
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+          pip install pytest
 
-      - name: Check Python scripts are runnable
-        run: |
-          for f in scripts/*.py; do
-            echo "Checking $f"
-            python3 "$f" --help || true
-          done
+      - name: Run tests
+        run: make test
 
-      - name: Build report from existing artifacts
-        run: |
-          python3 scripts/build_report.py --artifacts artifacts --output artifacts/summary/preci_report.md
+      - name: Regression guard
+        env:
+          CI_EVENT_NAME: ${{ github.event_name }}
+          SOFT_MODE: ${{ github.event_name == 'pull_request' }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make guard
 
-      - name: Upload Pre-CI Report
+      - name: Plot trend
+        run: make report
+
+      - name: Upload artifact preci-report
         uses: actions/upload-artifact@v4
         with:
           name: preci-report
-          path: artifacts/summary/preci_report.md
+          path: |
+            artifacts/summary/**
+            report.xml
+            ab_report.md
+          if-no-files-found: warn
+          retention-days: 7
