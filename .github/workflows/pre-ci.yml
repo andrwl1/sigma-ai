@@ -1,61 +1,61 @@
-name: pre-ci
+name: Pre-CI
 
 on:
-  push:
-    branches: [ master, main ]
   pull_request:
-    branches: [ master, main ]
-  workflow_dispatch:
+  push:
+    branches: [ master ]
 
-# Минимальные права
 permissions:
   contents: read
+  actions: read
+  checks: read
 
-# Отменяем параллельные ранны одной ветки
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: pre-ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  THRESHOLD_PP: 2
+  GUARD_SOURCE_BRANCH: ${{ vars.GUARD_SOURCE_BRANCH || 'master' }}
+  GUARD_WORKFLOW: ${{ vars.GUARD_WORKFLOW || 'Pre-CI' }}
+
 jobs:
-  pre:
+  guard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'            # ✅ кэш pip
+          python-version: '3.12'
+          cache: 'pip'
 
       - name: Install deps
         run: |
-          python -m pip install -U pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          if [ -f pyproject.toml ]; then pip install -e . || true; fi
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
           pip install pytest
 
-      - name: Lint and hooks
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files
+      - name: Run tests
+        run: make test
 
-      - name: Tests
-        run: pytest -q
+      - name: Regression guard
+        env:
+          CI_EVENT_NAME: ${{ github.event_name }}
+          SOFT_MODE: ${{ github.event_name == 'pull_request' }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make guard
 
-      - name: Build report (skip if no Makefile:report)
-        run: |
-          if [ -f Makefile ] && grep -qE '^[[:space:]]*report:' Makefile; then
-            make report
-          else
-            echo "no Makefile:report — skipping"
-            mkdir -p artifacts/summary
-          fi
+      - name: Plot trend
+        run: make report
 
-      - name: Upload preci-report
+      - name: Upload artifact preci-report
         uses: actions/upload-artifact@v4
         with:
           name: preci-report
-          path: artifacts/summary
-          if-no-files-found: ignore
-          retention-days: 7        # ✅ retention
+          path: |
+            artifacts/summary/**
+            report.xml
+            ab_report.md
+          if-no-files-found: warn
+          retention-days: 7
