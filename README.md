@@ -30,3 +30,8 @@ docs/       — документация
 - Артефакты сохранены в artifacts/.
 - Сводка в summary/cloud_vs_local.md.
 - Отчёт: artifacts/reports/cloud_vs_local_report.md.
+## CI artifacts
+- `ab_report.md`
+- `artifacts/summary/passfail.png`
+- `artifacts/summary/judgement.tsv`
+- `artifacts/summary/ab_diff.csv`
