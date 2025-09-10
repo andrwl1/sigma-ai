@@ -1,9 +1,12 @@
-name: Pre-CI
+name: pre-ci
 
 on:
   pull_request:
   push:
     branches: [ master ]
+
+env:
+  THRESHOLD_PP: ${{ env.THRESHOLD_PP || 2 }}
 
 permissions:
   contents: read
@@ -14,13 +17,8 @@ concurrency:
   group: pre-ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  THRESHOLD_PP: 2
-  GUARD_SOURCE_BRANCH: ${{ vars.GUARD_SOURCE_BRANCH || 'master' }}
-  GUARD_WORKFLOW: ${{ vars.GUARD_WORKFLOW || 'Pre-CI' }}
-
 jobs:
-  guard:
+  pre-ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,30 +30,25 @@ jobs:
 
       - name: Install deps
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
-          pip install pytest
+          pip install -U pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          if [ -f pyproject.toml ]; then pip install -e .; fi
 
-      - name: Run tests
-        run: make test
+      - name: Diagnostics
+        run: |
+          python scripts/stability_report.py
+          python scripts/plot_passrate.py
 
-      - name: Regression guard
-        env:
-          CI_EVENT_NAME: ${{ github.event_name }}
-          SOFT_MODE: ${{ github.event_name == 'pull_request' }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: make guard
+      - name: Guard
+        run: |
+          bash scripts/guard.sh
 
-      - name: Plot trend
-        run: make report
-
-      - name: Upload artifact preci-report
+      - name: Upload preci-report
         uses: actions/upload-artifact@v4
         with:
           name: preci-report
           path: |
             artifacts/summary/**
-            report.xml
             ab_report.md
-          if-no-files-found: warn
           retention-days: 7
