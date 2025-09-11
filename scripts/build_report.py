@@ -1,5 +1,6 @@
 import os
 
+
 def build_report(artifacts_dir, output_file):
     md = []
     md.append("| Test | Model | Timestamp | Req Short | First Short |")
