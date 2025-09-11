@@ -42,8 +42,14 @@ jobs:
       - name: Tests
         run: pytest -q
 
-      - name: Build report
-        run: make report
+      - name: Build report (skip if no Makefile:report)
+        run: |
+          if [ -f Makefile ] && grep -qE '^[[:space:]]*report:' Makefile; then
+            make report
+          else
+            echo "no Makefile:report — skipping"
+            mkdir -p artifacts/summary
+          fi
 
       - name: Upload preci-report
         uses: actions/upload-artifact@v4
