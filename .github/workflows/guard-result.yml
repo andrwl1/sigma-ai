@@ -1,0 +1,63 @@
+name: Guard RESULT (regression check)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    env:
+      # --- Порог, п.п. (passrate), можно переопределять в vars или в шаге ---
+      THRESHOLD_PP: ${{ vars.THRESHOLD_PP || 2 }}
+      # ---- По умолчанию soft (не падаем). Для strict выставь FAIL_ON_DIFF=1 ---
+      FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF || 0 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install deps
+        run: python3 -m pip install -U pip
+
+      - name: Auth GH CLI
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y gh jq
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run current bench (produce artifacts/summary/*)
+        run: |
+          bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
+          ls -lh artifacts/summary || true
+          test -f artifacts/summary/ab_report.md
+
+      # --- Сравнение с последним успешным прогоном на default-ветке ---
+      - name: Guard regression
+        id: guard
+        run: |
+          set -euo pipefail
+          bash scripts/guard_regress.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          THRESHOLD_PP: ${{ env.THRESHOLD_PP }}
+          FAIL_ON_DIFF: ${{ env.FAIL_ON_DIFF }}
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## Guard RESULT" >> $GITHUB_STEP_SUMMARY
+          echo "- Mode: $([[ '${{ env.FAIL_ON_DIFF }}' == '1' ]] && echo '**STRICT**' || echo 'soft')" >> $GITHUB_STEP_SUMMARY
+          echo "- Threshold: ${THRESHOLD_PP} pp" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See workflow logs for diff details." >> $GITHUB_STEP_SUMMARY
