@@ -1,6 +1,6 @@
 name: Guard RESULT
 on:
-  pull_request:
+  pull_request_target:
 permissions:
   contents: read
   pull-requests: write
@@ -33,5 +33,5 @@ jobs:
         if: ${{ env.FAIL_ON_DIFF == '1' }}
         run: |
           if [ -s artifacts/summary/ab_diff.csv ]; then
-            echo "Regression detected"; exit 1;
+            echo Regression; exit 1;
           fi
