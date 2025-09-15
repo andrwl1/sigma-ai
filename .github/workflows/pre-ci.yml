@@ -35,7 +35,7 @@ jobs:
       - name: Diagnostics
         run: |
           python scripts/stability_report.py
-          python scripts/plot_passrate.py
+          python scripts/stability_report.py
       - name: Guard
         run: |
           bash scripts/guard.sh
