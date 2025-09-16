@@ -2,9 +2,11 @@ name: guard-result
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  workflow_dispatch: {}   # ← добавили ручной запуск
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   guard:
     runs-on: ubuntu-latest
@@ -19,9 +21,9 @@ jobs:
       - run: python -m pip install -U pip
       - run: python -m pip install -r requirements.txt
       - run: python -m pip install -r requirements-dev.txt || true
-      - name: Build minimal diff (stub)
+      - name: Ensure stub ab_diff.csv
         run: |
           mkdir -p artifacts/summary
-          printf "name,pp,delta_pp\nbase,0,0\n" > artifacts/summary/ab_diff.csv
-      - name: Run guard
-        run: bash scripts/guard.sh
+          echo "name,pp,delta_pp" > artifacts/summary/ab_diff.csv
+          echo "base,0,0" >> artifacts/summary/ab_diff.csv
+      - run: bash scripts/guard.sh
