@@ -16,7 +16,9 @@ jobs:
       - run: python -m pip install -U pip
       - run: python -m pip install -r requirements.txt
       - run: python -m pip install -r requirements-dev.txt || true
-      - run: bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
+      - name: Build minimal report (stub)
+      - name: Run bench and build report
+        run: bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
       - uses: actions/upload-artifact@v4
         with:
           name: preci-report

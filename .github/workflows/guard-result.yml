@@ -27,3 +27,7 @@ jobs:
           echo "name,pp,delta_pp" > artifacts/summary/ab_diff.csv
           echo "base,0,0" >> artifacts/summary/ab_diff.csv
       - run: bash scripts/guard.sh
+      - name: Run bench to produce diff
+        run: bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
+      - name: Run guard
+        run: bash scripts/guard.sh
