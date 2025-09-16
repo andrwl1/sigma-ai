@@ -2,6 +2,7 @@ name: guard-result
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch: {}   # ← добавили ручной запуск
 permissions:
   contents: read
 jobs:
@@ -22,4 +23,5 @@ jobs:
         run: |
           mkdir -p artifacts/summary
           printf "name,pp,delta_pp\nbase,0,0\n" > artifacts/summary/ab_diff.csv
-      - run: bash scripts/guard.sh
+      - name: Run guard
+        run: bash scripts/guard.sh
