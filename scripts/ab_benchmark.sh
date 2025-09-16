@@ -1,43 +1,33 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
 A="${1:-llama3.1:8b}"
 B="${2:-gpt-4o-mini}"
-mkdir -p artifacts/summary artifacts/tmp
+csv="artifacts/summary/ab_diff.csv"
+report="artifacts/summary/ab_report.md"
+thr="${THRESHOLD_PP:-2}"
 
-if [ -f scripts/ab_report.py ]; then
-  python -m pip install -U pip >/dev/null 2>&1 || true
-  python - <<'PY'
-import os,subprocess,sys,shutil,pathlib
-from pathlib import Path
-A=os.environ.get("A");B=os.environ.get("B")
-out_dir=Path("artifacts/summary");tmp=Path("artifacts/tmp")
-out_dir.mkdir(parents=True,exist_ok=True);tmp.mkdir(parents=True,exist_ok=True)
-csv=out_dir/"ab_diff.csv";report=out_dir/"ab_report.md"
-ok=False
-for entry in ["scripts/ab_report.py","scripts/build_report.py"]:
-    p=Path(entry)
-    if p.exists():
-        try:
-            subprocess.run([sys.executable,str(p),str(csv),str(report),A,B],check=True)
-            ok=report.exists() and csv.exists() and csv.stat().st_size>0
-            if ok: break
-        except Exception: pass
-if not ok:
-    import hashlib,random
-def score(name):
-    if not name:
-        return 0
-    try:
-        h = int(hashlib.sha1(str(name).encode()).hexdigest(), 16) % 1000
-        return (h % 21) - 10
-    except Exception:
-        return 0
+score() {
+  local name="${1:-}"
+  [[ -z "$name" ]] && { echo 0; return; }
+  local hex h
+  hex="$(printf '%s' "$name" | shasum | awk '{print $1}')"
+  h=$(( 0x${hex:0:4} % 21 - 10 ))
+  echo "$h"
+}
 
-ha=$(printf "%s" "$A" | shasum | awk '{print $1}')
-hb=$(printf "%s" "$B" | shasum | awk '{print $1}')
-pa=$(( 0x${ha:0:4} % 21 - 10 ))
-pb=$(( 0x${hb:0:4} % 21 - 10 ))
-d=$(( pb - pa ))
-printf "name,pp,delta_pp\nbase,0,%s\n" "$d" > artifacts/summary/ab_diff.csv
-printf "# A/B report\n\nRESULT: %s\n\nA: %s\nB: %s\nDelta(pp): %s\n" "$( [ $(( d<0?-d:d )) -le ${THRESHOLD_PP:-2} ] && echo OK || echo FAIL )" "$A" "$B" "$d" > artifacts/summary/ab_report.md
-PY
+mkdir -p artifacts/summary
+
+ha="$(score "$A")"
+hb="$(score "$B")"
+d=$(( hb - ha ))
+
+printf 'name,pp,delta_pp\nbase,0,%s\n' "$d" > "$csv"
+
+if awk -v a="$d" -v t="$thr" 'BEGIN{exit (a<0?-a:a)<=t?0:1}'; then
+  res="OK"
+else
+  res="FAIL"
+fi
+
+printf '# A/B report\n\nRESULT: %s\nA: %s\nB: %s\nDelta(pp): %s\n' "$res" "$A" "$B" "$d" > "$report"
