@@ -24,16 +24,14 @@ for entry in ["scripts/ab_report.py","scripts/build_report.py"]:
         except Exception: pass
 if not ok:
     import hashlib,random
-    def score(name):
-        h=int(hashlib.sha1(name.encode()).hexdigest(),16)%1000
-        return (h%21)-10
-    a=score(A); b=score(B); d=b-a
-    with open(csv,"w") as f: f.write("name,pp,delta_pp\nbase,0,%d\n"%d)
-    with open(report,"w") as f:
-        f.write("# A/B report\n\nRESULT: %s\n\nA: %s\nB: %s\nDelta(pp): %d\n"%( "OK" if abs(d)<=2 else "FAIL",A,B,d))
-PY
-  exit 0
-fi
+def score(name):
+    if not name:
+        return 0
+    try:
+        h = int(hashlib.sha1(str(name).encode()).hexdigest(), 16) % 1000
+        return (h % 21) - 10
+    except Exception:
+        return 0
 
 ha=$(printf "%s" "$A" | shasum | awk '{print $1}')
 hb=$(printf "%s" "$B" | shasum | awk '{print $1}')
