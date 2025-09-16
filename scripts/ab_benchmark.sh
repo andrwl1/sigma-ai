@@ -40,3 +40,4 @@ pb=$(( 0x${hb:0:4} % 21 - 10 ))
 d=$(( pb - pa ))
 printf "name,pp,delta_pp\nbase,0,%s\n" "$d" > artifacts/summary/ab_diff.csv
 printf "# A/B report\n\nRESULT: %s\n\nA: %s\nB: %s\nDelta(pp): %s\n" "$( [ $(( d<0?-d:d )) -le ${THRESHOLD_PP:-2} ] && echo OK || echo FAIL )" "$A" "$B" "$d" > artifacts/summary/ab_report.md
+PY
