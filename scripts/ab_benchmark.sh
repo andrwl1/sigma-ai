@@ -7,7 +7,7 @@ mkdir -p artifacts/summary artifacts/tmp
 if [ -f scripts/ab_report.py ]; then
   python -m pip install -U pip >/dev/null 2>&1 || true
   python - <<'PY'
-import os,subprocess,sys,shutil,Pathlib
+import os,subprocess,sys,shutil,pathlib
 from pathlib import Path
 A=os.environ.get("A");B=os.environ.get("B")
 out_dir=Path("artifacts/summary");tmp=Path("artifacts/tmp")
