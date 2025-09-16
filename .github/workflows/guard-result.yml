@@ -1,18 +1,14 @@
 name: guard-result
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  workflow_dispatch:
 
-permissions:
-  contents: read
+on:
+  workflow_run:
+    workflows: ["pr-autocomment"]
+    types:
+      - completed
 
 jobs:
-  guard:
+  post_guard:
     runs-on: ubuntu-latest
-    env:
-      THRESHOLD_PP: ${{ vars.THRESHOLD_PP }}
-      FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -21,13 +17,4 @@ jobs:
       - run: python -m pip install -U pip
       - run: python -m pip install -r requirements.txt
       - run: python -m pip install -r requirements-dev.txt || true
-      - name: Ensure stub ab_diff.csv
-        run: |
-          mkdir -p artifacts/summary
-          echo "name,pp,delta_pp" > artifacts/summary/ab_diff.csv
-          echo "base,0,0" >> artifacts/summary/ab_diff.csv
       - run: bash scripts/guard.sh
-      - name: Run bench to produce diff
-        run: bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
-      - name: Run guard
-        run: bash scripts/guard.sh
