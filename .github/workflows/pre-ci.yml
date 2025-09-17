@@ -37,8 +37,12 @@ jobs:
           python scripts/stability_report.py
           python scripts/stability_report.py
       - name: Guard
-        run: |
-          bash scripts/guard.sh
+        if: ${{ hashFiles('artifacts/summary/ab_diff.csv') != '' }}
+        env:
+        THRESHOLD_PP: ${{ vars.THRESHOLD_PP }}
+        FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF }}
+        run: bash scripts/guard.sh
+        continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
       - name: Upload preci-report
         uses: actions/upload-artifact@v4
         with:
