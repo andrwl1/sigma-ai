@@ -32,6 +32,13 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
 
+      - name: Guard AB artifacts and diffs
+        env:
+          THRESHOLD_PP: ${{ vars.THRESHOLD_PP }}
+          FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF }}
+        run: bash scripts/guard.sh
+        continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
+
       - name: Upload AB summary
         uses: actions/upload-artifact@v4
         with:

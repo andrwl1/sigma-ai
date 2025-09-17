@@ -25,10 +25,3 @@ jobs:
       - name: Run integration tests (T400)
         run: make integration
         continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
-
-      - name: Guard AB artifacts and diffs
-        env:
-          THRESHOLD_PP: ${{ vars.THRESHOLD_PP }}
-          FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF }}
-        run: bash scripts/guard.sh
-        continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
