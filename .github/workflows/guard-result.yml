@@ -26,6 +26,9 @@ jobs:
         run: make integration
         continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
 
-      - name: Enforce strict mode if requested
-        if: ${{ vars.FAIL_ON_DIFF == '1' && failure() }}
-        run: exit 1
+      - name: Guard AB artifacts and diffs
+        env:
+          THRESHOLD_PP: ${{ vars.THRESHOLD_PP }}
+          FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF }}
+        run: bash scripts/guard.sh
+        continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
