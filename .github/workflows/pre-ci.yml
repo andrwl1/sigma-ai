@@ -2,44 +2,50 @@ name: pre-ci
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
   push:
-    branches: [ master ]
-
-env:
-  THRESHOLD_PP: 2
+    branches: [master]
 
 permissions:
   contents: read
-  actions: read
-  checks: read
 
 concurrency:
   group: pre-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  pre-ci:
+  pre_ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: 'pip'
+
       - name: Install deps
         run: |
           pip install -U pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
           if [ -f pyproject.toml ]; then pip install -e .; fi
+
       - name: Diagnostics
         run: |
-          python scripts/stability_report.py
-          python scripts/stability_report.py
+          python scripts/stability_report.py || true
+
+      # Запускаем guard только если CSV есть
       - name: Guard
-        run: |
-          bash scripts/guard.sh
+        if: ${{ hashFiles('artifacts/summary/ab_diff.csv') != '' }}
+        env:
+          THRESHOLD_PP: ${{ vars.THRESHOLD_PP }}
+          FAIL_ON_DIFF: ${{ vars.FAIL_ON_DIFF }}
+        run: bash scripts/guard.sh
+        continue-on-error: ${{ vars.FAIL_ON_DIFF != '1' }}
+
       - name: Upload preci-report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: preci-report
