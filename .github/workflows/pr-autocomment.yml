@@ -40,6 +40,8 @@ jobs:
         run: bash scripts/guard.sh
 
       - name: PR autocomment
+        continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: artifacts/summary/ab_report.md
+
