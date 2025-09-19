@@ -1,12 +1,8 @@
 name: Guard RESULT
-
 on:
   workflow_dispatch:
   push:
-    branches:
-      - chore/guard-hardening
-      - main
-      - master
+    branches: [chore/guard-hardening, main, master]
 
 jobs:
   guard:
@@ -15,9 +11,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: build-min-artifacts
         run: |
-          mkdir -p artifacts/summary
+          mkdir -p artifacts/summary artifacts/plots
           printf "id,local,cloud\nT1,0,0\n" > artifacts/summary/ab_diff.csv
-          echo x > artifacts/summary/passfail.png
+          echo x > artifacts/plots/ab_plot.png
       - name: run-guard
-        run: |
-          FAIL_ON_DIFF=1 bash scripts/guard_regress.sh
+        env:
+          FAIL_ON_DIFF: "1"
+        run: bash scripts/guard_regress.sh
