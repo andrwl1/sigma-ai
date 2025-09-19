@@ -1,54 +1,47 @@
-name: PR Report Comment
+name: pr-autocomment
 
 on:
   pull_request:
+    types: [synchronize, opened, reopened]
+  push:
+    branches: [ci/pr-autocomment-guard]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
-  report:
+  bench_and_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
-      - name: Install deps
-        run: python3 -m pip install -U pip
+      - run: python -m pip install -U pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip install -r requirements-dev.txt || true
 
-      - name: Set env
-        run: echo "OK"
+      - name: Run smoke A/B
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LIMIT: "30"
+        run: bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
 
-      - name: Run mini bench
-        run: |
-          bash scripts/run_ab.sh llama3.1:8b gpt-4o-mini
-          test -f artifacts/summary/ab_report.md
-
-      - name: Prepare PR body
-        run: |
-          printf "<!-- ab_report -->\n" > /tmp/pr_body.md
-          cat artifacts/summary/ab_report.md >> /tmp/pr_body.md
-
-      - name: Find existing comment
-        id: find
-        uses: peter-evans/find-comment@v3
+      - name: Upload AB summary
+        uses: actions/upload-artifact@v4
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: github-actions[bot]
-          body-includes: "<!-- ab_report -->"
+          name: ab-summary
+          path: artifacts/summary/*
 
-      - name: Create or update comment
-        uses: peter-evans/create-or-update-comment@v4
+      - name: Guard
+        run: bash scripts/guard.sh
+
+      - name: PR autocomment
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          comment-id: ${{ steps.find.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body-file: /tmp/pr_body.md
-          edit-mode: replace
+          path: artifacts/summary/ab_report.md
+
