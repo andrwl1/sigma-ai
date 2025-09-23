@@ -1,3 +1,10 @@
 .venv/
 __pycache__/
 .DS_Store
+
+# build artifacts
+artifacts/
+ci_artifacts/
+
+scripts/set_openai_env.sh
+.env
