@@ -1,0 +1,3 @@
+test_id,model_a,model_b,delta
+T1,llama3.1:8b,gpt-4o-mini,0.00
+T2,llama3.1:8b,gpt-4o-mini,0.10
