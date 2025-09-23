@@ -1,5 +1,6 @@
 import os
 
+
 def judge_basics(artifacts_dir, output_file):
     md = []
     md.append("| Test | Verdict | Notes |")
