@@ -20,7 +20,8 @@ jobs:
 
       - name: Install deps
         run: |
-          python -m pip install -U pip matplotlib
+          python  -m pip install -U pip matplotlib
+          python3 -m pip install -U pip matplotlib
 
       - name: Smoke T30
         env:
