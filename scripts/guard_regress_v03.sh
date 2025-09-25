@@ -13,7 +13,7 @@ FAIL_ON_DIFF="${FAIL_ON_DIFF:-1}"
 [ -f "$DIFF" ] || exit 2
 [ -s "$DIFF" ] || exit 3
 
-DELTA_COL="$(awk -F, 'NR==1{for(i=1;i<=NF;i++) if($i ~ /^delta(_pp)?$/){print i; exit}}' "$DIFF")"
+DELTA_COL="$(awk -F, 'NR==1{for(i=1;i<=NF;i++){s=$i; gsub(/\r/,"",s); gsub(/^"|"$/,"",s); if(s ~ /^delta(_pp)?$/){print i; exit}}}' "$DIFF")"
 [ -n "${DELTA_COL:-}" ] || exit 4
 
 ROWS="$(wc -l < "$DIFF" | tr -d ' ')"
