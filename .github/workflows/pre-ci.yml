@@ -2,48 +2,42 @@ name: pre-ci
 
 on:
   pull_request:
-  push:
-    branches: [ master ]
-
-env:
-  THRESHOLD_PP: 2
-
-permissions:
-  contents: read
-  actions: read
-  checks: read
-
-concurrency:
-  group: pre-ci-${{ github.ref }}
-  cancel-in-progress: true
+    push:
+      branches: [ master ]
 
 jobs:
-  pre-ci:
+  smoke:
     runs-on: ubuntu-latest
+    concurrency:
+      group: pre-ci-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'
-      - name: Install deps
+          python-version: "3.11"
+
+      - name: Deps
         run: |
-          pip install -U pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          if [ -f pyproject.toml ]; then pip install -e .; fi
-      - name: Diagnostics
+        python -m pip install --upgrade pip
+        pip install matplotlib
+
+      - name: Smoke T30
+        env:
+          LIMIT: "30"
+          MODE: "smoke"
+          MIN_ROWS: "2"
+          FAIL_ON_DIFF: "1"
         run: |
-          python scripts/stability_report.py
-          python scripts/stability_report.py
-      - name: Guard
-        run: |
-          bash scripts/guard.sh
-      - name: Upload preci-report
+          bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+          python3 scripts/run_ab.py --mode "${MODE}" --limit "${LIMIT}" --models "llama3.1:8b" "llama3.1:8b"
+          bash scripts/guard_regress_v03.sh
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: preci-report
+          name: smoke-artifacts
           path: |
-            artifacts/summary/**
-            ab_report.md
-          retention-days: 7
+            artifacts/summary/*
+            artifacts/plots/*
+            artifacts/manifest.json
