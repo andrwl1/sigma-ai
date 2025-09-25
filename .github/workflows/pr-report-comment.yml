@@ -12,10 +12,9 @@ jobs:
           python-version: '3.11'
       - name: Install deps
         run: |
-          echo "PY=$pythonLocation/bin/python" >> $GITHUB_ENV
-          echo "Using Python: $PY"
           $pythonLocation/bin/python -m pip install -U pip
           $pythonLocation/bin/python -m pip install matplotlib
       - name: Run mini bench
         run: |
-          bash scripts/run_ab.sh llama3.1:8b gpt-4o-mini
+          bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
+          $pythonLocation/bin/python scripts/run_ab.py --mode smoke --limit 30 --models "llama3.1:8b" "gpt-4o-mini"
