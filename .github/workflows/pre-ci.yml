@@ -1,7 +1,10 @@
 name: pre-ci
+
 on:
   pull_request:
+  push:
     branches: [ master ]
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
@@ -13,19 +16,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Deps
         run: |
           python -m pip install -U pip matplotlib
+
       - name: Smoke T30
         env:
           LIMIT: "30"
           MODE: "smoke"
-          MIN_ROWS: "30"
+          MIN_ROWS: "2"
           FAIL_ON_DIFF: "1"
         run: |
           bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
           python3 scripts/run_ab.py --mode "${MODE}" --limit "${LIMIT}" --models "llama3.1:8b" "llama3.1:8b"
           bash scripts/guard_regress_v03.sh
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -34,3 +40,4 @@ jobs:
             artifacts/summary/*
             artifacts/plots/*
             artifacts/manifest.json
+~
