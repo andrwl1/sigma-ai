@@ -2,8 +2,8 @@ name: pre-ci
 
 on:
   pull_request:
-  push:
-    branches: [ master ]
+    push:
+      branches: [ master ]
 
 jobs:
   smoke:
@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: smoke-artifacts
-          path:
-            - artifacts/summary/*
-            - artifacts/plots/*
-            - artifacts/manifest.json
+          path: |
+            artifacts/summary/*
+            artifacts/plots/*
+            artifacts/manifest.json
