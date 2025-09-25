@@ -2,16 +2,15 @@ name: PR Report Comment
 
 on:
   pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -20,9 +19,15 @@ jobs:
           python -m pip install -U pip matplotlib
 
       - name: Run mini bench
+        env:
+          MODE: "smoke"
+          LIMIT: "30"
+          MIN_ROWS: "2"
+          FAIL_ON_DIFF: "0"
         run: |
           bash scripts/run_ab.sh llama3.1:8b gpt-4o-mini
-          python3 scripts/run_ab.py
+          python3 scripts/run_ab.py --mode "${MODE}" --limit "${LIMIT}" --models "llama3.1:8b" "gpt-4o-mini"
+          bash scripts/guard_regress_v03.sh
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
