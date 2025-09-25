@@ -1,29 +1,25 @@
 name: PR Report Comment
-
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   report:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install deps
         run: |
-          python -m pip install -U pip matplotlib
+          python -m pip install -U pip
+          python -m pip install matplotlib
 
       - name: Run mini bench
         run: |
           bash scripts/run_ab.sh llama3.1:8b gpt-4o-mini
 
-      - name: Prepare PR body
-        run: echo "TODO: attach summary/report"
-
-      - name: Create or update comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          path: artifacts/summary/ab_report.md
