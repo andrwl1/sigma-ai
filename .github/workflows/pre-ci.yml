@@ -36,8 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: smoke-artifacts
-          path: |
-            artifacts/summary/*
-            artifacts/plots/*
-            artifacts/manifest.json
-~
+          path:
+            - artifacts/summary/*
+            - artifacts/plots/*
+            - artifacts/manifest.json
