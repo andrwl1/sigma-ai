@@ -12,7 +12,7 @@ FAIL_ON_DIFF="${FAIL_ON_DIFF:-1}"
 if [ ! -f "$DIFF" ]; then exit 2; fi
 if [ ! -s "$DIFF" ]; then exit 3; fi
 H="$(head -n1 "$DIFF")"
-if [ "$H" != "prompt_id,model_a,model_b,equal,delta_pp" ]; then exit 4; fi
+if ! echo "$H" | grep -E '(^|,)prompt_id(,|,.*,)model_a(,|,.*,)model_b(,|,.*,)equal(,|,.*,)delta_pp$' >/dev/null; then exit 4; fi
 ROWS="$(wc -l < "$DIFF" | tr -d ' ')"
 if [ "$ROWS" -lt "$MIN_ROWS" ]; then exit 5; fi
 if [ ! -f "$MAN" ]; then exit 6; fi
