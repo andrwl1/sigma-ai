@@ -1,19 +1,26 @@
-## 📦 Артефакты
+# ∑AI Benchmarks
 
-| Файл                           | Содержимое                  | Где появляется             |
-|--------------------------------|-----------------------------|----------------------------|
-| `artifacts/summary/ab_report.md` | Основной отчёт mini-bench   | CI, автокоммент в PR       |
-| `artifacts/summary/ab_diff.csv`  | Дифф метрик (CSV)           | Guard RESULT (regression)  |
-| `artifacts/summary/passrate.png` | График passrate по тестам   | Mini-bench / CI            |
+## Overview
+Repository for automated benchmarking of LLMs with reproducible pipelines.
 
-## ⬇️ Скачивание артефактов из CI
+## Structure
+- scripts/ – runners, guard, helpers
+- tests/ – prompt corpora
+- artifacts/ – results and plots
+- .github/workflows/ – CI pipelines
 
-Через UI:
-1. Зайти во вкладку **Actions** → выбрать нужный workflow run.
-2. Внизу страницы есть блок **Artifacts** → скачать zip.
+## Quickstart
+python -m venv .venv
+source .venv/bin/activate
+pip install -U pip matplotlib pandas
 
-Через CLI (пример для артефакта `preci-report`):
-```bash
-gh run list -L 5
-gh run download <RUN_ID> --name "preci-report" --dir artifacts/summary
-ls -lh artifacts/summary
+## Smoke test
+LIMIT=30 MODE=smoke bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+
+## Nightly
+LIMIT=500 MODE=nightly bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+
+## Outputs
+- artifacts/summary/ab_diff.csv
+- artifacts/plots/ab_plot.png
+- artifacts/manifest.json
