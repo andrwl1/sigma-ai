@@ -2,48 +2,35 @@ name: pre-ci
 
 on:
   pull_request:
-  push:
-    branches: [ master ]
-
-env:
-  THRESHOLD_PP: 2
+  workflow_dispatch:
 
 permissions:
   contents: read
-  actions: read
-  checks: read
-
-concurrency:
-  group: pre-ci-${{ github.ref }}
-  cancel-in-progress: true
+  pull-requests: write
 
 jobs:
-  pre-ci:
+  smoke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'
-      - name: Install deps
-        run: |
-          pip install -U pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          if [ -f pyproject.toml ]; then pip install -e .; fi
-      - name: Diagnostics
-        run: |
-          python scripts/stability_report.py
-          python scripts/stability_report.py
-      - name: Guard
-        run: |
-          bash scripts/guard.sh
-      - name: Upload preci-report
-        uses: actions/upload-artifact@v4
+          python-version: '3.11'
+      - run: python -m venv .venv
+      - run: .venv/bin/activate && python -m pip install -U pip matplotlib pandas
+      - run: .venv/bin/activate && LIMIT=30 MODE=smoke bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+      - run: .venv/bin/activate && python scripts/write_manifest.py --dataset tests/prompts.tsv --limit 30 --mode smoke --model-a llama3.1:8b --model-b llama3.1:8b
+      - run: MODE=smoke FAIL_ON_DIFF=1 MIN_ROWS=2 bash scripts/guard_regress.sh
+      - run: bash scripts/ci_pr_comment.sh
+      - uses: actions/github-script@v7
+        if: ${{ github.event.pull_request.number }}
         with:
-          name: preci-report
-          path: |
-            artifacts/summary/**
-            ab_report.md
-          retention-days: 7
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('comment.txt', 'utf8');
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });

@@ -1,10 +1,9 @@
-name: PR Autocomment
+name: PR Report Comment
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
-  autocomment:
+  report:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,12 +14,13 @@ jobs:
         run: |
           $pythonLocation/bin/python -m pip install -U pip
           $pythonLocation/bin/python -m pip install matplotlib
-      - name: Run auto bench
+      - name: Run mini bench
         env:
           MODE: "smoke"
           LIMIT: "30"
           MIN_ROWS: "2"
           FAIL_ON_DIFF: "1"
         run: |
-          bash scripts/run_ab.sh llama3.1:8b gpt-4o-mini
+          bash scripts/ab_benchmark.sh llama3.1:8b gpt-4o-mini
+          $pythonLocation/bin/python scripts/run_ab.py --mode "${MODE}" --limit "${LIMIT}" --models "llama3.1:8b" "gpt-4o-mini"
           bash scripts/guard_regress_v03.sh
