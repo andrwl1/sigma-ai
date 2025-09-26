@@ -8,3 +8,5 @@ ci_artifacts/
 
 scripts/set_openai_env.sh
 .env
+
+artifacts/
