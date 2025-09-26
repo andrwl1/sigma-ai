@@ -1,38 +1,33 @@
 name: pre-ci
 on:
   pull_request:
-  push:
-    branches: [ master ]
+    types: [opened, synchronize, reopened]
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    concurrency:
-      group: pre-ci-${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install deps
-        run: |
-          $pythonLocation/bin/python -m pip install -U pip
-          $pythonLocation/bin/python -m pip install matplotlib
-      - name: Smoke T30
-        env:
-          LIMIT: "30"
-          MODE: "smoke"
-          MIN_ROWS: "2"
-          FAIL_ON_DIFF: "1"
-        run: |
-          bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
-          $pythonLocation/bin/python scripts/run_ab.py --mode "${MODE}" --limit "${LIMIT}" --models "llama3.1:8b" "llama3.1:8b"
-          bash scripts/guard_regress_v03.sh
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - run: python -m venv .venv
+      - run: . .venv/bin/activate && python -m pip install -U pip matplotlib pandas
+      - run: . .venv/bin/activate && LIMIT=30 MODE=smoke bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+      - run: . .venv/bin/activate && python scripts/write_manifest.py --dataset tests/prompts.tsv --limit 30 --mode smoke --model-a llama3.1:8b --model-b llama3.1:8b
+      - run: MODE=smoke FAIL_ON_DIFF=1 MIN_ROWS=2 bash scripts/guard_regress.sh
+      - uses: actions/upload-artifact@v4
         with:
-          name: smoke-artifacts
-          path: |
-            artifacts/summary/*
-            artifacts/plots/*
-            artifacts/manifest.json
+          name: artifacts
+          path: artifacts
+      - run: bash scripts/ci_pr_comment.sh
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('comment.txt','utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });

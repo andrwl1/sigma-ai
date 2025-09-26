@@ -1,0 +1,25 @@
+name: nightly
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+jobs:
+  t500:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m venv .venv
+      - run: . .venv/bin/activate && python -m pip install -U pip matplotlib pandas
+      - run: . .venv/bin/activate && MODE=nightly LIMIT=500 bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+      - run: . .venv/bin/activate && python scripts/write_manifest.py --dataset tests/prompts.tsv --limit 500 --mode nightly --model-a llama3.1:8b --model-b llama3.1:8b
+      - run: MODE=nightly FAIL_ON_DIFF=0 MIN_ROWS=500 bash scripts/guard_regress.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cloud_run_${{ github.run_id }}
+          path: artifacts
+      - run: |
+          echo "Nightly summary" >> $GITHUB_STEP_SUMMARY
+          jq . artifacts/manifest.json >> $GITHUB_STEP_SUMMARY
