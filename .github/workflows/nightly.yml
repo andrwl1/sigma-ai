@@ -3,7 +3,7 @@ name: nightly
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 05 * * *'
+    - cron: '17 05 * * *'   # 05:17 UTC ежедневно
   pull_request:
     branches: [ master ]
 
@@ -15,6 +15,7 @@ permissions:
 jobs:
   t500:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,14 +23,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install matplotlib pandas
-
+      # создаём venv и ставим зависимости ВНУТРИ venv
       - name: Create venv
         run: python -m venv .venv
 
+      - name: Install dependencies (in venv)
+        run: |
+          . .venv/bin/activate
+          pip install --upgrade pip
+          pip install matplotlib pandas
+
+      # основной прогон
       - name: Run T500 benchmark
         run: |
           . .venv/bin/activate
@@ -39,8 +43,11 @@ jobs:
         run: |
           . .venv/bin/activate
           python scripts/write_manifest.py \
-            --dataset tests/prompts.tsv --limit 500 \
-            --mode nightly --model-a llama3.1:8b --model-b llama3.1:8b
+            --dataset tests/prompts.tsv \
+            --limit 500 \
+            --mode nightly \
+            --model-a llama3.1:8b \
+            --model-b llama3.1:8b
 
       - name: Guard regress
         run: MODE=nightly FAIL_ON_DIFF=0 MIN_ROWS=500 bash scripts/guard_regress.sh
@@ -51,6 +58,7 @@ jobs:
       - name: Retention (keep 14)
         run: KEEP_N=14 bash scripts/retention.sh artifacts/nightly 14
 
+      # загрузка артефактов
       - name: Upload nightly artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,29 +66,28 @@ jobs:
           name: nightly-${{ github.run_id }}
           if-no-files-found: error
           path: |
-            # прямые файлы
             summary/*.csv
             summary/*.tsv
             summary/*.md
             plots/*.png
             manifest.json
-            # упакованные файлы (на будущее/если уже так складываешь)
             artifacts/nightly/**/summary/*.csv
             artifacts/nightly/**/summary/*.tsv
             artifacts/nightly/**/summary/*.md
             artifacts/nightly/**/plots/*.png
             artifacts/nightly/**/manifest.json
 
+      # автокомментарий в PR (только для событий pull_request)
       - name: Comment on PR with nightly results
         if: ${{ github.event_name == 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MANIFEST=$(
-            find artifacts/nightly -type f -name manifest.json 2>/dev/null | head -1 || \
-            { test -f manifest.json && echo manifest.json; }
-          )
+          MANIFEST=$(ls -1t artifacts/nightly/**/cloud_run_*/cloud_runs/*/manifest.json 2>/dev/null | head -1 || true)
+          if [ -z "$MANIFEST" ]; then
+            MANIFEST=$(find artifacts/nightly -type f -name manifest.json | head -1 || true)
+          fi
           if [ -n "$MANIFEST" ]; then
-            BODY=$(bash scripts/ci_nightly_comment.sh "$MANIFEST")
+            BODY="$(bash scripts/ci_nightly_comment.sh "$MANIFEST")"
             gh pr comment ${{ github.event.pull_request.number }} --body "$BODY"
           fi
