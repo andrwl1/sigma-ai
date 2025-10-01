@@ -54,13 +54,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nightly-${{ github.run_id }}
-          if-no-files-found: error
           path: |
-            artifacts/nightly/**/*.csv
-            artifacts/nightly/**/*.tsv
-            artifacts/nightly/**/*.md
-            artifacts/nightly/**/*.png
-            artifacts/nightly/**/manifest.json
+            artifacts/nightly/**/*
+            artifacts/nightly/tmp/**/*
 
       - name: Comment on PR with nightly results
         if: ${{ github.event_name == 'pull_request' }}
