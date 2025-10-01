@@ -58,6 +58,13 @@ jobs:
           name: nightly-${{ github.run_id }}
           if-no-files-found: error
           path: |
+            # прямые файлы
+            summary/*.csv
+            summary/*.tsv
+            summary/*.md
+            plots/*.png
+            manifest.json
+            # упакованные файлы (на будущее/если уже так складываешь)
             artifacts/nightly/**/summary/*.csv
             artifacts/nightly/**/summary/*.tsv
             artifacts/nightly/**/summary/*.md
@@ -69,7 +76,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MANIFEST=$(find artifacts/nightly -type f -name manifest.json | head -1 || true)
+          MANIFEST=$(
+            find artifacts/nightly -type f -name manifest.json 2>/dev/null | head -1 || \
+            { test -f manifest.json && echo manifest.json; }
+          )
           if [ -n "$MANIFEST" ]; then
             BODY=$(bash scripts/ci_nightly_comment.sh "$MANIFEST")
             gh pr comment ${{ github.event.pull_request.number }} --body "$BODY"
