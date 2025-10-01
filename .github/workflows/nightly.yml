@@ -25,7 +25,7 @@ jobs:
         run: |
           python -m venv .venv
           source .venv/bin/activate
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install matplotlib pandas
 
       - name: Run T500 benchmark
@@ -36,7 +36,7 @@ jobs:
       - name: Write manifest
         run: |
           source .venv/bin/activate
-          python scripts/write_manifest.py --dataset tests/prompts.tsv --limit 500 --mode nightly --model llama3.1:8b
+          python scripts/write_manifest.py --dataset tests/prompts.tsv --limit 500 --mode nightly --model-a llama3.1:8b --model-b llama3.1:8b
 
       - name: Guard regress
         run: |
@@ -54,6 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nightly-${{ github.run_id }}
+          if-no-files-found: error
           path: |
             artifacts/nightly/**/*.csv
             artifacts/nightly/**/*.tsv
