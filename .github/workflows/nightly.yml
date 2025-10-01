@@ -24,20 +24,28 @@ jobs:
       - run: MODE=nightly FAIL_ON_DIFF=0 MIN_ROWS=500 bash scripts/guard_regress.sh
       - run: bash scripts/nightly_pack.sh
       - run: KEEP_N=14 bash scripts/retention.sh artifacts/nightly 14
+
       - name: Upload nightly artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nightly-${{ github.run_id }}
           path: |
-            summary/*.csv
-            summary/*.tsv
-            summary/*.md
-            plots/*.png
-            manifest.json
+            artifacts/nightly/**/summary/*.csv
+            artifacts/nightly/**/summary/*.tsv
+            artifacts/nightly/**/summary/*.md
+            artifacts/nightly/**/plots/*.png
+            artifacts/nightly/**/manifest.json
+
       - name: Comment on PR with nightly results
         if: ${{ github.event_name == 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BODY=$(bash scripts/ci_nightly_comment.sh manifest.json)
+          MANIFEST=$(ls -1t artifacts/nightly/*/cloud_run_*/cloud_runs/*/manifest.json 2>/dev/null | head -1 || true)
+          if [ -z "$MANIFEST" ]; then
+            MANIFEST=$(find artifacts/nightly -type f -name manifest.json | head -1 || true)
+          fi
+          [ -n "$MANIFEST" ] || exit 0
+          BODY=$(bash scripts/ci_nightly_comment.sh "$MANIFEST")
           gh pr comment ${{ github.event.pull_request.number }} --body "$BODY"
