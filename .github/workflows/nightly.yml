@@ -67,10 +67,16 @@ jobs:
           if [ -z "$MANI" ]; then
             MANI=$(find artifacts/nightly/**/manifest.json 2>/dev/null | head -1 || true)
           fi
+
           if [ -n "$MANI" ]; then
             BODY=$(bash scripts/ci_nightly_comment.sh "$MANI")
           else
             MD=$(find artifacts/nightly/**/summary/*.md 2>/dev/null | head -1 || true)
-            BODY="${MD:+Nightly summary attached.}"
+            if [ -n "$MD" ]; then
+              BODY="Nightly summary attached: $MD"
+            else
+              BODY="Nightly run completed, but no manifest or summary was found."
+            fi
           fi
+
           gh pr comment ${{ github.event.pull_request.number }} --body "$BODY"
