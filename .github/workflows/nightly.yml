@@ -26,7 +26,7 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           python -m pip install --upgrade pip
-          pip install matplotlib pandas
+          python -m pip install matplotlib pandas
 
       - name: Run T500 benchmark
         run: |
@@ -44,10 +44,12 @@ jobs:
           MODE=nightly FAIL_ON_DIFF=0 MIN_ROWS=500 bash scripts/guard_regress.sh
 
       - name: Pack nightly
-        run: bash scripts/nightly_pack.sh
+        run: |
+          bash scripts/nightly_pack.sh
 
       - name: Retention (keep 14)
-        run: KEEP_N=14 bash scripts/retention.sh artifacts/nightly 14
+        run: |
+          KEEP_N=14 bash scripts/retention.sh artifacts/nightly 14
 
       - name: Upload nightly artifacts
         if: always()
@@ -55,8 +57,14 @@ jobs:
         with:
           name: nightly-${{ github.run_id }}
           path: |
-            artifacts/nightly/**/*
-            artifacts/nightly/tmp/**/*
+            artifacts/ab_diff.csv
+            artifacts/manifest.json
+            artifacts/summary/**
+            artifacts/plots/**
+            artifacts/nightly/**
+            artifacts/nightly/tmp/**
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Comment on PR with nightly results
         if: ${{ github.event_name == 'pull_request' }}
@@ -67,16 +75,6 @@ jobs:
           if [ -z "$MANI" ]; then
             MANI=$(find artifacts/nightly/**/manifest.json 2>/dev/null | head -1 || true)
           fi
-
           if [ -n "$MANI" ]; then
-            BODY=$(bash scripts/ci_nightly_comment.sh "$MANI")
-          else
-            MD=$(find artifacts/nightly/**/summary/*.md 2>/dev/null | head -1 || true)
-            if [ -n "$MD" ]; then
-              BODY="Nightly summary attached: $MD"
-            else
-              BODY="Nightly run completed, but no manifest or summary was found."
-            fi
+            echo "Nightly artifacts uploaded for run $GITHUB_RUN_ID" | gh pr comment "$GITHUB_REF_NAME" -F -
           fi
-
-          gh pr comment ${{ github.event.pull_request.number }} --body "$BODY"
