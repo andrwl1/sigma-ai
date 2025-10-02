@@ -51,6 +51,10 @@ jobs:
         run: |
           KEEP_N=14 bash scripts/retention.sh artifacts/nightly 14
 
+      - name: List artifacts tree
+        run: |
+          find artifacts -maxdepth 3 -type f -print | sort || true
+
       - name: Upload nightly artifacts
         if: always()
         uses: actions/upload-artifact@v4
