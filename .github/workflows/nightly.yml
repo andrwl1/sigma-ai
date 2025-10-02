@@ -61,12 +61,10 @@ jobs:
         with:
           name: nightly-${{ github.run_id }}
           path: |
-            artifacts/ab_diff.csv
-            artifacts/manifest.json
             artifacts/summary/**
             artifacts/plots/**
-            artifacts/nightly/**
-            artifacts/nightly/tmp/**
+            artifacts/ab_diff.csv
+            artifacts/manifest.json
           if-no-files-found: ignore
           retention-days: 14
 
@@ -75,10 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MANI=$(find artifacts/nightly/**/cloud_run_*/manifest.json 2>/dev/null | head -1 || true)
-          if [ -z "$MANI" ]; then
-            MANI=$(find artifacts/nightly/**/manifest.json 2>/dev/null | head -1 || true)
-          fi
+          MANI=$(find artifacts/summary -name 'ab_diff.csv' -o -name 'manifest.json' 2>/dev/null | head -1 || true)
           if [ -n "$MANI" ]; then
             echo "Nightly artifacts uploaded for run $GITHUB_RUN_ID" | gh pr comment "$GITHUB_REF_NAME" -F -
           fi
