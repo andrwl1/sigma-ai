@@ -1,48 +1,66 @@
 #!/usr/bin/env python3
-import argparse,csv,hashlib,json,os,statistics,subprocess,time
-def fnum(x):
-    try: return float(x)
-    except: return 0.0
-def ibool(x):
-    v=str(x).strip().lower()
-    if v in ("1","true","t","yes","y"): return 1
-    if v in ("0","false","f","no","n",""): return 0
-    try: return int(v)
-    except: return 0
-def p95(xs):
-    if not xs: return 0.0
-    xs=sorted(xs); k=max(0,int(round(0.95*(len(xs)-1))))
-    return float(xs[k])
-p=argparse.ArgumentParser()
-p.add_argument("--dataset",required=True)
-p.add_argument("--limit",type=int,required=True)
-p.add_argument("--mode",required=True)
-p.add_argument("--model-a",required=True)
-p.add_argument("--model-b",required=True)
-p.add_argument("--runner",default="local")
-p.add_argument("--csv",default="artifacts/summary/ab_diff.csv")
-p.add_argument("--out",default="artifacts/manifest.json")
-a=p.parse_args()
-os.makedirs("artifacts",exist_ok=True)
-with open(a.dataset,"rb") as f:
-    dataset_sha=hashlib.sha256(f.read()).hexdigest()
-deltas=[]; eq=0; rows=0
-with open(a.csv,newline="") as f:
-    r=csv.DictReader(f)
-    for row in r:
-        rows+=1
-        deltas.append(fnum(row.get("delta_pp","0")))
-        eq+=ibool(row.get("equal","0"))
-pass_rate=(eq/rows) if rows else 0.0
-mean=statistics.mean(deltas) if deltas else 0.0
-p95v=p95(deltas)
-commit=subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip()
-branch=subprocess.check_output(["git","rev-parse","--abbrev-ref","HEAD"]).decode().strip()
-ts=int(time.time()*1000)
-manifest={
-  "commit":commit,"branch":branch,"run_id":str(ts),"timestamp":ts,"runner":a.runner,
-  "dataset_sha":dataset_sha,"limit":a.limit,"model_a":a.model_a,"model_b":a.model_b,
-  "mode":a.mode,"rows":rows,"pass_rate":pass_rate,"delta_pp_mean":mean,"delta_pp_p95":p95v
-}
-with open(a.out,"w") as f: json.dump(manifest,f,indent=2,sort_keys=True)
-print(a.out)
+import argparse, csv, json, math, os, re, sys
+
+def count_rows_tsv(path):
+    if not os.path.isfile(path): return None
+    with open(path, 'r', encoding='utf-8') as f:
+        return max(sum(1 for _ in f) - 1, 0)
+
+def read_delta_pp(csv_path):
+    if not os.path.isfile(csv_path): return None
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        r = csv.DictReader(f)
+        for i,row in enumerate(r, start=1):
+            keys = {k.strip().lower():k for k in row.keys()}
+            for cand in ("delta_pp","delta","delta_pp_pct","delta_percent"):
+                if cand in keys:
+                    try:
+                        return float(row[keys[cand]])
+                    except: pass
+            break
+    return None
+
+def read_pass_rate(stab_path):
+    if not os.path.isfile(stab_path): return None
+    passes=fails=0
+    with open(stab_path,'r',encoding='utf-8') as f:
+        header=f.readline()
+        for line in f:
+            s=line.strip().lower()
+            if not s: continue
+            if re.search(r'(^|[\t, ;])pass([,\t ;]|$)', s): passes+=1
+            elif re.search(r'(^|[\t, ;])fail([,\t ;]|$)', s): fails+=1
+    tot=passes+fails
+    if tot<=0: return None
+    return round(passes/float(tot),6)
+
+def main():
+    p=argparse.ArgumentParser()
+    p.add_argument('--dataset', required=False, default='tests/prompts.tsv')
+    p.add_argument('--limit', type=int, default=500)
+    p.add_argument('--mode', default='nightly')
+    p.add_argument('--model-a', default='')
+    p.add_argument('--model-b', default='')
+    p.add_argument('--out', default='artifacts/manifest.json')
+    args=p.parse_args()
+
+    os.makedirs(os.path.dirname(args.out), exist_ok=True)
+    manifest={}
+    rows=count_rows_tsv(args.dataset)
+    if rows is not None:
+        manifest['rows']=int(min(rows, max(args.limit,0)))
+    dpp=read_delta_pp('artifacts/summary/ab_diff.csv')
+    if dpp is not None:
+        manifest['delta_pp']=float(dpp)
+    pr=read_pass_rate('artifacts/summary/stability.tsv')
+    if pr is not None:
+        manifest['pass_rate']=float(pr)
+    manifest['mode']=args.mode
+    if args.model_a if hasattr(args,'model_a') else args.model_a: pass
+    if args.model_a: manifest['model_a']=args.model_a
+    if args.model_b: manifest['model_b']=args.model_b
+    with open(args.out,'w',encoding='utf-8') as f:
+        json.dump(manifest,f,ensure_ascii=False,indent=2)
+    print(args.out)
+
+if __name__=='__main__': main()
