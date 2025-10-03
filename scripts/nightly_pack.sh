@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
-TS="$(date +%s)"
-DST="artifacts/pack/${TS}"
+
+DATE=$(date +%F)
+RUN_ID=${RUN_ID:-$(gh run list --workflow="nightly.yml" --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || echo local)}
+DST="artifacts/nightly/${DATE}"
 mkdir -p "$DST"
-find . -type f -name 'ab_diff.csv' -print -quit | xargs -I{} cp "{}" "$DST/ab_diff.csv"
-find . -type f -name 'ab_plot.png' -print -quit | xargs -I{} cp "{}" "$DST/ab_plot.png" || true
-find . -type f -name '*pass*.png' -print -quit | xargs -I{} cp "{}" "$DST/passrate.png" || true
-find . -type f -name 'manifest.json' -print -quit | xargs -I{} cp "{}" "$DST/manifest.json"
-test -s "$DST/ab_diff.csv" || exit 1
-test -s "$DST/manifest.json" || exit 1
-[ -f "$DST/ab_plot.png" ] || echo "warn: ab_plot.png missing"
-[ -f "$DST/passrate.png" ] || echo "warn: passrate.png missing"
-jq -e '.rows and .pass_rate and .delta_pp' "$DST/manifest.json" >/dev/null || true
+
+AB_SRC=$(find . -type f -name 'ab_diff.csv' -print -quit)
+PLOT_SRC=$(find . -type f -name 'ab_plot.png' -print -quit || true)
+PASS_SRC=$(find . -type f -name '*pass*.png' -print -quit || true)
+
+cp "$AB_SRC"   "$DST/ab_diff_${RUN_ID}.csv"
+[ -n "${PLOT_SRC:-}" ] && cp "$PLOT_SRC" "$DST/ab_plot_${RUN_ID}.png" || echo "warn: ab_plot.png missing"
+[ -n "${PASS_SRC:-}" ] && cp "$PASS_SRC" "$DST/passrate_${RUN_ID}.png" || echo "warn: passrate.png missing"
+
+bash scripts/manifest_enrich.sh . "$DST/manifest_${RUN_ID}.json"
+
+test -s "$DST/ab_diff_${RUN_ID}.csv"       || exit 1
+test -s "$DST/manifest_${RUN_ID}.json"     || exit 1
+
+jq -e 'has("rows") and has("pass_rate") and has("delta_pp") and
+       (.rows|type=="number") and (.pass_rate|type=="number") and (.delta_pp|type=="number")' \
+   "$DST/manifest_${RUN_ID}.json" >/dev/null
+
 echo "$DST"
