@@ -76,7 +76,7 @@ jobs:
             ROWS=$(jq -r '.rows // "na"' "$MANI")
             PASS=$(jq -r '.pass_rate // "na"' "$MANI")
             DPP=$(jq -r '.delta_pp // "na"' "$MANI")
-            gh pr comment "${{ github.event.pull_request.number }}" --body "nightly #${{ github.run_id }} — rows: $ROWS, pass_rate: $PASS, delta_pp: $DPP" || true
+            gh pr comment "${{ github.event.pull_request.number }}" --body "nightly #${{ github.run_id }} — rows: $ROWS, pass_rate: $PASS, delta_pp: $DPP"
           else
-            gh pr comment "${{ github.event.pull_request.number }}" --body "nightly #${{ github.run_id }} — artifacts uploaded (no manifest found)" || true
+            gh pr comment "${{ github.event.pull_request.number }}" --body "nightly #${{ github.run_id }} — artifacts uploaded (no manifest)"
           fi
