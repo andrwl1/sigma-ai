@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-DIR=${1:-artifacts/nightly}
-KEEP=${2:-14}
-runs=( $(ls -1dt "$DIR"/run-* 2>/dev/null || true) )
-total=${#runs[@]}
-if [ "$total" -le "$KEEP" ]; then exit 0; fi
-for ((i=KEEP; i<total; i++)); do rm -rf "${runs[$i]}"; done
+ROOT="${1:-artifacts/nightly}"
+KEEP="${2:-14}"
+[ -d "$ROOT" ] || exit 0
+
+# Оставляем последние KEEP директорий по mtime, остальное удаляем
+mapfile -t DIRS < <(find "$ROOT" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' \
+  | sort -nr | awk '{print $2}')
+COUNT=${#DIRS[@]}
+if (( COUNT > KEEP )); then
+  for d in "${DIRS[@]:KEEP}"; do rm -rf "$d"; done
+fi
