@@ -15,14 +15,13 @@ cp "$AB_SRC" "$DST/ab_diff_${RUN_ID}.csv"
 [ -n "${PASS_SRC:-}" ] && cp "$PASS_SRC" "$DST/passrate_${RUN_ID}.png" || echo "warn: passrate.png missing" >&2
 
 bash scripts/manifest_enrich.sh . "$DST/manifest_${RUN_ID}.json"
-echo "manifest_enrich.sh -> $DST/manifest_${RUN_ID}.json" >&2
 
 test -s "$DST/ab_diff_${RUN_ID}.csv"
 test -s "$DST/manifest_${RUN_ID}.json"
 
 jq -e 'has("rows") and has("pass_rate") and has("delta_pp")
-       and (.rows|type=="number")
-       and (.pass_rate|type=="number")
-       and (.delta_pp|type=="number")' "$DST/manifest_${RUN_ID}.json" >/dev/null
+      and (.rows|type=="number")
+      and (.pass_rate|type=="number")
+      and (.delta_pp|type=="number")' "$DST/manifest_${RUN_ID}.json" >/dev/null
 
 echo "$DST"
