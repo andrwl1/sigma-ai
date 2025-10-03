@@ -4,10 +4,15 @@ ROOT="${1:-artifacts/nightly}"
 KEEP="${2:-14}"
 [ -d "$ROOT" ] || exit 0
 
-# Оставляем последние KEEP директорий по mtime, остальное удаляем
-mapfile -t DIRS < <(find "$ROOT" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' \
-  | sort -nr | awk '{print $2}')
-COUNT=${#DIRS[@]}
-if (( COUNT > KEEP )); then
-  for d in "${DIRS[@]:KEEP}"; do rm -rf "$d"; done
-fi
+# Самые новые сначала
+DIRS=$(LC_ALL=C ls -1dt "$ROOT"/*/ 2>/dev/null || true)
+[ -n "$DIRS" ] || exit 0
+
+i=1
+# shellcheck disable=SC2086
+for d in $DIRS; do
+  if [ $i -gt "$KEEP" ]; then
+    rm -rf "$d"
+  fi
+  i=$((i+1))
+done
