@@ -10,3 +10,8 @@ scripts/set_openai_env.sh
 .env
 
 artifacts/
+
+# nightly temp
+/tmp
+/tmp_artifacts
+artifacts/nightly/*/verify_summary.txt

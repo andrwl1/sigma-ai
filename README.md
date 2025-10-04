@@ -24,3 +24,7 @@ LIMIT=500 MODE=nightly bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
 - artifacts/summary/ab_diff.csv
 - artifacts/plots/ab_plot.png
 - artifacts/manifest.json
+## Nightly usage
+Run nightly: `gh workflow run nightly.yml --ref master`
+Verify last run locally: `bash scripts/verify_t500.sh $(date +%F)`
+Keep N runs: `bash scripts/retention.sh`
