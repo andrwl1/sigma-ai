@@ -1,0 +1,83 @@
+name: nightly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 05 * * *'
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+jobs:
+  t500:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -U pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install matplotlib pandas
+
+      - name: Run T500 benchmark
+        run: |
+          source .venv/bin/activate
+          MODE=nightly LIMIT=500 bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
+
+      - name: Write manifest
+        run: |
+          source .venv/bin/activate
+          python scripts/write_manifest.py --dataset tests/prompts.tsv --limit 500 --mode nightly --model-a llama3.1:8b --model-b llama3.1:8b
+
+      - name: Guard regress
+        run: |
+          source .venv/bin/activate
+          MODE=nightly FAIL_ON_DIFF=0 MIN_ROWS=500 bash scripts/guard_regress.sh
+
+      - name: Enrich manifest
+        run: bash scripts/manifest_enrich.sh . artifacts/manifest.json
+
+      - name: Pack nightly
+        id: pack
+        run: |
+          PACK_DIR=$(bash scripts/nightly_pack.sh)
+          echo "PACK_DIR=$PACK_DIR" >> "$GITHUB_ENV"
+
+      - name: Retention (keep 14)
+        run: bash scripts/retention.sh artifacts/nightly 14
+
+      - name: Upload nightly artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-${{ github.run_id }}
+          path: ${{ env.PACK_DIR }}/*
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Comment on PR with nightly results
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MANI=$(ls -1t "${{ env.PACK_DIR }}"/manifest_*.json 2>/dev/null | head -n1 || true)
+          if [ -n "$MANI" ]; then
+            ROWS=$(jq -r '.rows // "na"' "$MANI")
+            PASS=$(jq -r '.pass_rate // "na"' "$MANI")
+            DPP=$(jq -r '.delta_pp // "na"' "$MANI")
+            gh pr comment "${{ github.event.pull_request.number }}" --body "nightly #${{ github.run_id }} — rows: $ROWS, pass_rate: $PASS, delta_pp: $DPP"
+          else
+            gh pr comment "${{ github.event.pull_request.number }}" --body "nightly #${{ github.run_id }} — artifacts uploaded (no manifest found)"
+          fi
+
