@@ -54,11 +54,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: t1000-${{ github.run_id }}
-          path: |
-            ab_diff.csv
-            ab_plot.png
-            passfail.png
-            manifest.json
-            verify_summary.txt
+          path: artifacts/t1000/*
           if-no-files-found: error
           retention-days: 14
