@@ -1,0 +1,64 @@
+name: t1000
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Test suite to run"
+        default: "t1000"
+        required: false
+      allow_cloud:
+        description: "Allow cloud models (true/false)"
+        default: "false"
+        required: false
+      notes:
+        description: "Optional run notes"
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency: t1000-${{ github.ref }}
+
+jobs:
+  t1000:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -U pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install matplotlib pandas
+
+      - name: Start T1000 benchmark
+        run: |
+          source .venv/bin/activate
+          bash scripts/start_t1000.sh
+
+      - name: Verify results
+        run: |
+          source .venv/bin/activate
+          bash scripts/verify_t1000.sh
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: t1000-${{ github.run_id }}
+          path: |
+            ab_diff.csv
+            ab_plot.png
+            passfail.png
+            manifest.json
+            verify_summary.txt
+          if-no-files-found: error
+          retention-days: 14
