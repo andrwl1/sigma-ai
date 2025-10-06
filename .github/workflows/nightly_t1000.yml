@@ -1,0 +1,24 @@
+name: nightly_t1000
+on:
+  schedule:
+    - cron: "27 2 * * *"
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install matplotlib
+      - run: bash scripts/start_t1000.sh t1000
+      - run: bash scripts/verify_t1000.sh t1000
+      - run: python3 scripts/metrics_rollup.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: t1000_artifacts
+          path: |
+            artifacts/t1000/latest
+            artifacts/t1000/metrics_history.csv
+            artifacts/t1000/passrate_local.png
