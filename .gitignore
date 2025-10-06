@@ -15,3 +15,8 @@ artifacts/
 /tmp
 /tmp_artifacts
 artifacts/nightly/*/verify_summary.txt
+artifacts/
+tmp_t1000_artifacts/
+*.png
+*.csv
+manifest.json
