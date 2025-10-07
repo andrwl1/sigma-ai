@@ -1,12 +1,14 @@
-name: nightly_t1000
+name: guard_pr
 on:
-  schedule:
-    - cron: "27 2 * * *"
-  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  run:
+  pr_check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,7 +28,17 @@ jobs:
           echo "rows=$ROWS" >> $GITHUB_OUTPUT
           echo "pass_rate=$PR" >> $GITHUB_OUTPUT
           echo "delta_pp=$DP" >> $GITHUB_OUTPUT
-          printf "rows=%s, pass_rate=%s, delta_pp=%s\n" "$ROWS" "$PR" "$DP"
+
+      - name: PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const rows = core.getInput('rows', { required: false }) || '${{ steps.parse.outputs.rows }}';
+            const pr   = core.getInput('pass_rate', { required: false }) || '${{ steps.parse.outputs.pass_rate }}';
+            const dp   = core.getInput('delta_pp', { required: false }) || '${{ steps.parse.outputs.delta_pp }}';
+            const body = `T1000 Report\n\nrows: ${rows}\npass_rate: ${pr}\ndelta_pp: ${dp}`;
+            const { owner, repo } = context.repo;
+            await github.rest.issues.createComment({ owner, repo, issue_number: context.issue.number, body });
 
       - name: Fail guard
         env:
@@ -35,11 +47,3 @@ jobs:
           PR="${{ steps.parse.outputs.pass_rate }}"
           TH="${THRESHOLD}"
           awk -v pr="$PR" -v th="$TH" 'BEGIN{if(pr+0<th+0) exit 1}'
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: t1000_artifacts
-          path: |
-            artifacts/t1000/latest
-            artifacts/t1000/metrics_history.csv
-            artifacts/t1000/passrate_local.png
