@@ -1,4 +1,5 @@
 name: nightly_t1000
+
 on:
   schedule:
     - cron: "27 2 * * *"
@@ -18,23 +19,23 @@ jobs:
       - run: python3 scripts/metrics_rollup.py
 
       - id: parse
+        shell: bash
         run: |
           SUM=artifacts/t1000/latest/verify_summary.txt
-          ROWS=$(awk -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="rows"){print $(i+1); exit}}' "$SUM")
-          PR=$(awk   -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="pass_rate"){print $(i+1); exit}}' "$SUM")
-          DP=$(awk   -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="delta_pp"){print $(i+1); exit}}' "$SUM")
-          echo "rows=$ROWS" >> $GITHUB_OUTPUT
-          echo "pass_rate=$PR" >> $GITHUB_OUTPUT
-          echo "delta_pp=$DP" >> $GITHUB_OUTPUT
-          printf "rows=%s, pass_rate=%s, delta_pp=%s\n" "$ROWS" "$PR" "$DP"
+          ROWS=$(grep -o 'rows=[0-9]\+' "$SUM" | cut -d= -f2)
+          PR=$(grep -o 'pass_rate=[0-9.]\+' "$SUM" | cut -d= -f2)
+          DP=$(grep -o 'delta_pp=[0-9.-]\+' "$SUM" | cut -d= -f2)
+          echo "rows=${ROWS:-0}" >> "$GITHUB_OUTPUT"
+          echo "pass_rate=${PR:-0}" >> "$GITHUB_OUTPUT"
+          echo "delta_pp=${DP:-0}" >> "$GITHUB_OUTPUT"
+          printf 'rows=%s, pass_rate=%s, delta_pp=%s\n' "${ROWS:-0}" "${PR:-0}" "${DP:-0}"
 
       - name: Fail guard
         env:
           THRESHOLD: "0.70"
+          PR: ${{ steps.parse.outputs.pass_rate }}
         run: |
-          PR="${{ steps.parse.outputs.pass_rate }}"
-          TH="${THRESHOLD}"
-          awk -v pr="$PR" -v th="$TH" 'BEGIN{if(pr+0<th+0) exit 1}'
+          awk -v pr="${PR:-0}" -v th="$THRESHOLD" 'BEGIN{ if ((pr+0) < (th+0)) exit 1 }'
 
       - uses: actions/upload-artifact@v4
         with:
