@@ -15,6 +15,20 @@ jobs:
       - run: bash scripts/start_t1000.sh t1000
       - run: bash scripts/verify_t1000.sh t1000
       - run: python3 scripts/metrics_rollup.py
+      - name: Report summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const s = fs.readFileSync('artifacts/t1000/latest/verify_summary.txt','utf8').trim();
+            core.summary.addHeading('T1000 summary').addCodeBlock(s).write();
+            core.notice(`T1000: ${s}`);
+      - name: Fail guard
+        run: |
+          SUM=artifacts/t1000/latest/verify_summary.txt
+          PR=$(awk -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="pass_rate") {print $(i+1); exit}}' "$SUM")
+          THRESH=${THRESHOLD:-0.60}
+          awk -v pr="$PR" -v th="$THRESH" 'BEGIN{if(pr+0<th+0) exit 1}'
       - uses: actions/upload-artifact@v4
         with:
           name: t1000_artifacts
