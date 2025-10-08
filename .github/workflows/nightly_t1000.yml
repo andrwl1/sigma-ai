@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       threshold:
-        description: pass_rate threshold
+        description: pass rate threshold
         required: false
         default: "0.70"
       suite:
@@ -14,30 +14,62 @@ on:
         required: false
         default: "t1000"
 
+concurrency:
+  group: nightly-t1000
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 jobs:
   run:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install matplotlib
 
-      - run: bash scripts/start_t1000.sh ${{ inputs.suite || 't1000' }}
-      - run: bash scripts/verify_t1000.sh ${{ inputs.suite || 't1000' }}
-      - run: python3 scripts/metrics_rollup.py
+      - name: Install deps
+        run: |
+          python3 -m pip install --upgrade pip wheel
+          python3 -m pip install matplotlib
+
+      - name: Start ${{ inputs.suite || 't1000' }}
+        run: |
+          bash scripts/start_t1000.sh ${{ inputs.suite || 't1000' }}
+
+      - name: Verify ${{ inputs.suite || 't1000' }}
+        run: |
+          bash scripts/verify_t1000.sh ${{ inputs.suite || 't1000' }}
+
+      - name: Roll up metrics and plot trend
+        run: |
+          python3 scripts/metrics_rollup.py
+          ls -lh artifacts/t1000/metrics_history.csv artifacts/t1000/passrate_local.png || true
 
       - id: parse
+        name: Parse verify_summary.txt
         run: |
-          SUM=artifacts/t1000/latest/verify_summary.txt
-          ROWS=$(awk -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="rows"){print $(i+1); exit}}' "$SUM")
-          PR=$(awk -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="pass_rate"){print $(i+1); exit}}' "$SUM")
-          DP=$(awk -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="delta_pp"){print $(i+1); exit}}' "$SUM")
-          echo "rows=$ROWS" >> $GITHUB_OUTPUT
-          echo "pass_rate=$PR" >> $GITHUB_OUTPUT
-          echo "delta_pp=$DP" >> $GITHUB_OUTPUT
-          printf "rows=%s, pass_rate=%s, delta_pp=%s\n" "$ROWS" "$PR" "$DP"
+          python3 - <<'PY'
+          import os, re, pathlib
+          p = pathlib.Path("artifacts/t1000/latest/verify_summary.txt")
+          rows=0; pr=0.0; dp=0.0
+          if p.exists():
+              t=p.read_text(encoding="utf-8", errors="ignore")
+              m1=re.search(r"rows\s*[:=]\s*(\d+)", t, re.I)
+              m2=re.search(r"pass[_\s-]?rate\s*[:=]\s*([0-9.]+)", t, re.I)
+              m3=re.search(r"delta[_\s-]?pp\s*[:=]\s*(-?[0-9.]+)", t, re.I)
+              if m1: rows=int(m1.group(1))
+              if m2: pr=float(m2.group(1))
+              if m3: dp=float(m3.group(1))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"rows={rows}\n")
+              f.write(f"pass_rate={pr}\n")
+              f.write(f"delta_pp={dp}\n")
+          PY
 
       - name: Upload artifacts
         if: always()
@@ -49,10 +81,30 @@ jobs:
             artifacts/t1000/metrics_history.csv
             artifacts/t1000/passrate_local.png
 
+      - name: Job summary
+        run: |
+          {
+            echo "### T1000 nightly summary"
+            echo ""
+            echo "- rows: **${{ steps.parse.outputs.rows }}**"
+            echo "- pass_rate: **${{ steps.parse.outputs.pass_rate }}**"
+            echo "- delta_pp: **${{ steps.parse.outputs.delta_pp }}**"
+            echo ""
+            echo "Artifacts: \`artifacts/t1000/latest\`, history: \`artifacts/t1000/metrics_history.csv\`"
+          } >> $GITHUB_STEP_SUMMARY
+
       - name: Fail guard
         env:
           THRESHOLD: ${{ inputs.threshold || '0.70' }}
+          PR: ${{ steps.parse.outputs.pass_rate || 0 }}
         run: |
-          PR="${{ steps.parse.outputs.pass_rate }}"
-          TH="$THRESHOLD"
-          awk -v pr="$PR" -v th="$TH" 'BEGIN{ if ((pr+0) < (th+0)) exit 1 }'
+          python3 - <<'PY'
+          import os, sys
+          pr=float(os.environ.get("PR","0"))
+          th=float(os.environ.get("THRESHOLD","0.7"))
+          if pr + 1e-12 < th:
+              print(f"Guard: pass_rate={pr:.6f} < threshold={th:.6f} -> FAIL")
+              sys.exit(1)
+          else:
+              print(f"Guard: pass_rate={pr:.6f} >= threshold={th:.6f} -> OK")
+          PY
