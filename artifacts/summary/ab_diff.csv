@@ -1,0 +1,13 @@
+prompt_id,model_a,model_b,equal,delta_pp
+id_1,A,B,False,0
+id_2,A,B,True,0
+id_3,A,B,False,0
+id_4,A,B,False,0
+id_5,A,B,True,0
+id_6,A,B,False,0
+id_7,A,B,False,0
+id_8,A,B,False,0
+id_9,A,B,False,0
+id_10,A,B,True,0
+id_11,A,B,True,0
+id_12,A,B,True,0
