@@ -1,21 +1,14 @@
-id	prompt
-t1000-001	What is 2+2?
-t1000-002	Translate "кот" to English.
-t1000-003	List 3 primary colors.
-t1000-004	What is the capital of France?
-t1000-005	Summarize in one sentence: The sun rises in the east and sets in the west.
-t1000-006	Sort numbers ascending: 9 1 4 7.
-t1000-007	Is water a compound or an element?
-t1000-008	Give a synonym for "happy".
-t1000-009	What day comes after Monday?
-t1000-010	Convert 300 centimeters to meters.
-t1000-011	Which is larger: 0.5 or 0.05?
-t1000-012	Plural of "child".
-t1000-013	Opposite of "cold".
-t1000-014	Spell the word "necessary".
-t1000-015	What shape has 3 sides?
-t1000-016	Who wrote "1984"?
-t1000-017	What gas do plants absorb during photosynthesis?
-t1000-018	Abbreviate "Artificial Intelligence".
-t1000-019	Which planet is known as the Red Planet?
-t1000-020	Round 2.68 to one decimal place.
+T1	Сумма 123+456=? Ответ только числом.
+
+T1000_001	Who wrote The Odyssey?	Homer
+T1000_002	2+2=?	4
+T1000_003	Capital of France?	Paris
+T1000_004	Largest planet in the Solar System?	Jupiter
+T1000_005	Opposite of 'hot'?	cold
+T1000_006	Square root of 81?	9
+T1000_007	Year after 1999?	2000
+T1000_008	Color of the clear daytime sky?	blue
+T1000_009	How many minutes in an hour?	60
+T1000_010	Chemical symbol for water?	H2O
+T1000_011	5*7=?	35
+T1000_012	Capital of Italy?	Rome
