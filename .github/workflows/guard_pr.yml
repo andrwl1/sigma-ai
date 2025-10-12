@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths-ignore:
-      - '.github/workflows/**'
+      - .github/workflows/**
 
 permissions:
   contents: read
@@ -28,12 +28,12 @@ jobs:
       - id: parse
         run: |
           SUM=artifacts/t1000/latest/verify_summary.txt
-          ROWS=$(awk -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="rows"){print $(i+1); exit}}' "$SUM")
-          PR=$(awk  -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="pass_rate"){print $(i+1); exit}}' "$SUM")
-          DP=$(awk  -F'[=, ]+' '{for(i=1;i<=NF;i++) if($i=="delta_pp"){print $(i+1); exit}}' "$SUM")
-          echo "rows=$ROWS" >> "$GITHUB_OUTPUT"
-          echo "pass_rate=$PR" >> "$GITHUB_OUTPUT"
-          echo "delta_pp=$DP" >> "$GITHUB_OUTPUT"
+          ROWS=$(awk -F'[: ]+' '{for(i=1;i<=NF;i++) if($i=="rows"){print $(i+1); exit}}' "$SUM")
+          PR=$(awk -F'[: ]+' '{for(i=1;i<=NF;i++) if($i=="pass_rate"){print $(i+1); exit}}' "$SUM")
+          DP=$(awk -F'[: ]+' '{for(i=1;i<=NF;i++) if($i=="delta_pp"){print $(i+1); exit}}' "$SUM")
+          echo "rows=$ROWS" >> $GITHUB_OUTPUT
+          echo "pass_rate=$PR" >> $GITHUB_OUTPUT
+          echo "delta_pp=$DP" >> $GITHUB_OUTPUT
       - name: PR comment
         uses: actions/github-script@v7
         with:
@@ -42,7 +42,6 @@ jobs:
             const passRate = '${{ steps.parse.outputs.pass_rate }}';
             const deltaPP = '${{ steps.parse.outputs.delta_pp }}';
             const body = `**T1000 quick report**\n\n- rows: ${rows}\n- pass_rate: ${passRate}\n- delta_pp: ${deltaPP}`;
-            const { context, github } = require('@actions/github');
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
