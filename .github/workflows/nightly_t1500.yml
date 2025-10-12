@@ -24,8 +24,20 @@ jobs:
           python - <<'PY'
           import nltk
           nltk.download('punkt', quiet=True)
-          nltk.download('punkt_tab', quiet=True)
           PY
 
-      - name: Run suite t1500
-        run: bash scripts/run_t1500.sh
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
+
+      - name: Run T1500
+        run: bash scripts/start_t1500.sh t1500
+
+      - name: Verify T1500
+        run: bash scripts/verify_t1500.sh t1500
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: t1500
+          path: artifacts/t1500/latest/**
+          if-no-files-found: warn
