@@ -1,0 +1,44 @@
+name: nightly_t1500
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+permissions:
+  contents: read
+concurrency:
+  group: nightly_t1500
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install sacrebleu evaluate sentence-transformers matplotlib
+          python - <<'PY'
+          import nltk
+          nltk.download('punkt', quiet=True)
+          nltk.download('punkt_tab', quiet=True)
+          PY
+      - name: Run metrics
+        env:
+          PYTHONPATH: .
+          SIGMA_MODEL_PY: src.sigma.core:run_model
+        run: |
+          bash scripts/run_metrics.sh tests/t1000.tsv artifacts metrics_history.csv
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: t1500-nightly
+          path: |
+            artifacts/**
+            metrics.json
+            metrics_latest.json
+            metrics_history.csv
+          if-no-files-found: ignore
+          retention-days: 30
