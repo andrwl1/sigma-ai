@@ -1,0 +1,45 @@
+name: nightly_t1000_rollup
+
+on:
+  workflow_run:
+    workflows: ["nightly_t1000"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  rollup:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download previous history
+        uses: actions/download-artifact@v4
+        with:
+          name: metrics_history
+          path: .
+        continue-on-error: true
+
+      - name: Ensure history exists
+        run: |
+          if [ ! -f metrics_history.csv ]; then
+            echo "timestamp,run,suite,passrate,fails,notes" > metrics_history.csv
+          fi
+
+      - name: Rollup
+        run: SUITE=t1000 bash scripts/run_rollup.sh
+
+      - name: Upload history
+        uses: actions/upload-artifact@v4
+        with:
+          name: metrics_history
+          path: metrics_history.csv
+          if-no-files-found: warn
