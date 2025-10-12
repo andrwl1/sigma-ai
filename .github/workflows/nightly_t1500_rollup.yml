@@ -1,6 +1,3 @@
-ed -s .github/workflows/nightly_t1500_rollup.yml <<'ED'
-g/^/,$d
-$a
 name: nightly_t1500_rollup
 
 on:
@@ -31,7 +28,9 @@ jobs:
 
       - name: Ensure history exists
         run: |
-          test -f metrics_history.csv || echo "timestamp,run,suite,passrate,fails,notes" > metrics_history.csv
+          if [ ! -f metrics_history.csv ]; then
+            echo "timestamp,run,suite,passrate,fails,notes" > metrics_history.csv
+          fi
 
       - name: Rollup
         run: bash scripts/run_rollup.sh
@@ -42,6 +41,3 @@ jobs:
           name: metrics_history
           path: metrics_history.csv
           if-no-files-found: warn
-.
-wq
-ED
