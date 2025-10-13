@@ -1,3 +1,4 @@
+
 # ∑AI Benchmarks
 
 ## Overview
@@ -28,3 +29,10 @@ LIMIT=500 MODE=nightly bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
 Run nightly: `gh workflow run nightly.yml --ref master`
 Verify last run locally: `bash scripts/verify_t500.sh $(date +%F)`
 Keep N runs: `bash scripts/retention.sh`
+
+## T2000
+
+Статус: **validated** (baseline зафиксирован, воспроизводимость подтверждена)
+
+[![nightly_t2000](https://github.com/andrw1/sigma-ai/actions/workflows/nightly_t2000.yml/badge.svg)](../../actions/workflows/nightly_t2000.yml)
+[![nightly_t2000_rollup](https://github.com/andrw1/sigma-ai/actions/workflows/nightly_t2000_rollup.yml/badge.svg)](../../actions/workflows/nightly_t2000_rollup.yml)
