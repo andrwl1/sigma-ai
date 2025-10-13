@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: nightly_t2000.yml
+          workflow_conclusion: success
+          name: t2000_artifacts
+          path: artifacts/t2000
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
