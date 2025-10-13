@@ -15,7 +15,7 @@ jobs:
         with:
           workflow: nightly_t2500.yml
           workflow_conclusion: success
-          name: t2500
+          name: t2500_artifacts
           path: artifacts/t2500
 
       - uses: actions/setup-python@v5
