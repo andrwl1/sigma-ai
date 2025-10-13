@@ -20,3 +20,6 @@ tmp_t1000_artifacts/
 *.png
 *.csv
 manifest.json
+
+sigma-ai/
+
