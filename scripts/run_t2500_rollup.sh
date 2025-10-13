@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -e
-
-input_dir=$1
-metrics=$2
-trend=$3
-
-python scripts/python/eval/rollup.py --input "$input_dir" --metrics "$metrics" --trend "$trend"
+input_dir="$1"
+history="$2"
+trend="$3"
+python -m sigma.eval.rollup \
+  --metrics "$input_dir/metrics.json" \
+  --history "$history" \
+  --label "t2500_nightly" \
+  --trend "$trend"
