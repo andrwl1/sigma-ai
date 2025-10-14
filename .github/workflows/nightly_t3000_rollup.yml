@@ -1,4 +1,5 @@
 name: nightly_t3000_rollup
+
 on:
   workflow_run:
     workflows: ["nightly_t3000"]
@@ -17,6 +18,8 @@ jobs:
   rollup:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
       - uses: actions/checkout@v4
 
@@ -29,7 +32,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ steps.setup.outputs.python-version }}-${{ hashFiles('**/requirements*.txt', '**/pyproject.toml', 'scripts/python/**/requirements*.txt', 'scripts/python/**/pyproject.toml') }}
+          key: pip-${{ runner.os }}-${{ steps.setup.outputs.python-version }}-${{ hashFiles('**/requirements*.txt', '**/pyproject.*', '**/setup.py', 'scripts/python/**/pyproject.toml', 'scripts/python/**/setup.py') }}
           restore-keys: |
             pip-${{ runner.os }}-${{ steps.setup.outputs.python-version }}-
 
@@ -64,9 +67,7 @@ jobs:
           retention-days: 21
 
       - name: Notify on failure
-        if: ${{ failure() && secrets.SLACK_WEBHOOK_URL != '' }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: ${{ failure() && env.SLACK_WEBHOOK_URL != '' }}
         run: |
           payload='{"text":"nightly_t3000_rollup failed: '${{ github.server_url }}'/'${{ github.repository }}'/actions/runs/'${{ github.run_id }}'"}'
           curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
