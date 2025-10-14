@@ -4,38 +4,46 @@ on:
   workflow_dispatch:
     inputs:
       source_run_id:
-        description: 'Run ID of nightly_t3000 to roll up (optional when manual)'
+        description: "Run ID of nightly_t3000 (optional)"
         required: false
   workflow_run:
     workflows: ["nightly_t3000"]
     types: [completed]
 
 permissions:
-  contents: read
   actions: read
+  contents: read
 
 jobs:
   rollup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Download artifacts from nightly_t3000 (auto)
-        if: github.event_name == 'workflow_run'
-        uses: actions/download-artifact@v4
+      - name: Resolve source run id
+        id: src
+        run: |
+          if [ -n "${{ github.event.inputs.source_run_id }}" ]; then
+            echo "rid=${{ github.event.inputs.source_run_id }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "rid=${{ github.event.workflow_run.id }}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Using run id: $(cat $GITHUB_OUTPUT)"
+
+      - name: Download t3000 artifacts
+        uses: dawidd6/action-download-artifact@v6
         with:
+          repo: ${{ github.repository }}
+          run_id: ${{ steps.src.outputs.rid }}
           name: t3000_artifacts
           path: artifacts/t3000
-          run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Download artifacts from nightly_t3000 (manual)
-        if: github.event_name == 'workflow_dispatch' && inputs.source_run_id != ''
-        uses: actions/download-artifact@v4
+      - uses: actions/setup-python@v5
         with:
-          name: t3000_artifacts
-          path: artifacts/t3000
-          run-id: ${{ inputs.source_run_id }}
+          python-version: "3.11"
+
+      - name: Install sigma
+        run: pip install -e scripts/python
 
       - name: Rollup T3000
         run: bash scripts/run_t3000_rollup.sh artifacts/t3000 artifacts/metrics_history.csv artifacts/trend_drift_t3000.png
