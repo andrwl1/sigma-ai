@@ -1,0 +1,6 @@
+id	prompt	expected
+T3000_001	Define the principle of ontological coherence.	It is the internal consistency of being and reasoning.
+T3000_002	Explain what self-reflection means for AI.	It means awareness of own reasoning and interpretive limits.
+T3000_003	Describe difference between logic and ontology.	Logic governs structure; ontology governs existence of structure.
+T3000_004	Test ability to reason about reasoning itself.	The model should recognize recursive layers of thought.
+T3000_005	Explain "to be, not to seem" in scientific context.	It defines truth as alignment between internal and external models.
