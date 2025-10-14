@@ -1,11 +1,22 @@
 name: nightly_t3000
 on:
   workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: t3000-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
       - name: Run T3000
         run: bash scripts/run_t3000.sh tests/t3000.tsv artifacts/t3000 metrics_history.csv
       - name: Upload artifacts
@@ -13,3 +24,4 @@ jobs:
         with:
           name: t3000_artifacts
           path: artifacts/t3000
+          retention-days: 21
