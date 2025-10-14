@@ -1,49 +1,42 @@
 name: nightly_t3000_rollup
 
 on:
-  workflow_dispatch:
-    inputs:
-      source_run_id:
-        description: "Run ID of nightly_t3000 (optional)"
-        required: false
   workflow_run:
     workflows: ["nightly_t3000"]
     types: [completed]
 
-permissions:
-  actions: read
-  contents: read
+concurrency:
+  group: t3000-rollup-${{ github.event.workflow_run.id }}
+  cancel-in-progress: true
 
 jobs:
   rollup:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Resolve source run id
-        id: src
-        run: |
-          if [ -n "${{ github.event.inputs.source_run_id }}" ]; then
-            echo "rid=${{ github.event.inputs.source_run_id }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "rid=${{ github.event.workflow_run.id }}" >> "$GITHUB_OUTPUT"
-          fi
-          echo "Using run id: $(cat $GITHUB_OUTPUT)"
-
-      - name: Download t3000 artifacts
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          repo: ${{ github.repository }}
-          run_id: ${{ steps.src.outputs.rid }}
-          name: t3000_artifacts
-          path: artifacts/t3000
-
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.10'
+
+      - name: Download t3000 artifacts
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          run_id: ${{ github.event.workflow_run.id }}
+          name: t3000_artifacts
+          path: artifacts/t3000
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install sigma
-        run: pip install -e scripts/python
+        run: |
+          if [ -f pyproject.toml ] || [ -f setup.py ]; then
+            pip install -e .
+          elif [ -f scripts/python/pyproject.toml ] || [ -f scripts/python/setup.py ]; then
+            pip install -e scripts/python
+          else
+            echo "No Python project found"; exit 1
+          fi
 
       - name: Rollup T3000
         run: bash scripts/run_t3000_rollup.sh artifacts/t3000 artifacts/metrics_history.csv artifacts/trend_drift_t3000.png
@@ -52,4 +45,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: t3000_rollup_artifacts
-          path: artifacts/t3000
+          path: artifacts
