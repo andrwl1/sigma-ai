@@ -1,4 +1,4 @@
-name: nightly_t2500
+name: nightly_t3000
 on:
   schedule:
     - cron: "0 3 * * *"
@@ -13,10 +13,10 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install -U pip
       - run: pip install -e .
-      - run: bash scripts/run_t2500.sh tests/t2500.tsv artifacts/t2500 metrics_history.csv
+      - run: bash scripts/run_t3000.sh tests/t3000.tsv artifacts/t3000 metrics_history.csv
       - uses: actions/upload-artifact@v4
         with:
-          name: t2500_artifacts
+          name: t3000_artifacts
           path: |
-            artifacts/t2500/metrics.json
-            artifacts/t2500/results.jsonl
+            artifacts/t3000/metrics.json
+            artifacts/t3000/results.jsonl
