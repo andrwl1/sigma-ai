@@ -1,16 +1,27 @@
 name: nightly_t3000_rollup
+
 on:
   workflow_dispatch: {}
   workflow_run:
     workflows: ["nightly_t3000"]
     types: [completed]
+
 jobs:
   rollup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts from nightly_t3000
+        uses: actions/download-artifact@v4
+        with:
+          name: t3000_artifacts
+          path: artifacts/t3000
+
       - name: Rollup T3000
         run: bash scripts/run_t3000_rollup.sh artifacts/t3000 artifacts/metrics_history.csv artifacts/trend_drift_t3000.png
+
       - name: Upload rollup artifacts
         uses: actions/upload-artifact@v4
         with:
