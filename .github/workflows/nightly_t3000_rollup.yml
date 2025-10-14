@@ -1,10 +1,18 @@
 name: nightly_t3000_rollup
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: 'Run ID of nightly_t3000 to roll up (optional when manual)'
+        required: false
   workflow_run:
     workflows: ["nightly_t3000"]
     types: [completed]
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   rollup:
@@ -13,11 +21,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download artifacts from nightly_t3000
+      - name: Download artifacts from nightly_t3000 (auto)
+        if: github.event_name == 'workflow_run'
         uses: actions/download-artifact@v4
         with:
           name: t3000_artifacts
           path: artifacts/t3000
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Download artifacts from nightly_t3000 (manual)
+        if: github.event_name == 'workflow_dispatch' && inputs.source_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: t3000_artifacts
+          path: artifacts/t3000
+          run-id: ${{ inputs.source_run_id }}
 
       - name: Rollup T3000
         run: bash scripts/run_t3000_rollup.sh artifacts/t3000 artifacts/metrics_history.csv artifacts/trend_drift_t3000.png
