@@ -8,22 +8,40 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Cache NLTK data
+        uses: actions/cache@v4
+        with:
+          path: ~/nltk_data
+          key: nltk-${{ runner.os }}-v1
+
       - name: Prepare NLTK data
         run: |
           python - <<'PY'
-          import nltk
-          nltk.download('punkt', quiet=True)
+          import os, nltk
+          d = os.path.expanduser('~/nltk_data')
+          os.makedirs(d, exist_ok=True)
+          nltk.data.path.append(d)
+          pkgs = ['punkt', 'punkt_tab', 'wordnet', 'omw-1.4', 'averaged_perceptron_tagger']
+          for p in pkgs:
+              try:
+                  nltk.download(p, download_dir=d, quiet=True, raise_on_error=True)
+                  print(f"Downloaded: {p}")
+              except Exception as e:
+                  print(f"WARN: {p}: {e}")
           PY
 
       - name: Make scripts executable
