@@ -2,18 +2,17 @@ name: nightly_t1500_rollup
 
 on:
   workflow_run:
-    workflows: ["nightly_t1500"]
     types: [completed]
   workflow_dispatch:
 
 jobs:
   rollup:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' ||
+            (github.event.workflow_run.conclusion == 'success' &&
+             github.event.workflow_run.name == 'nightly_t1500') }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
