@@ -37,18 +37,19 @@ jobs:
       - name: Prepare history for rollup
         run: |
           mkdir -p src/metrics
-          cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || echo "date,suite,metric,value" > src/metrics/metrics_history.csv
+          # кладём историю и в корень, и рядом со скриптом
           cp artifacts/history/metrics_history.csv metrics_history.csv || echo "date,suite,metric,value" > metrics_history.csv
-          echo "✅ history files ready:"
-          ls -l metrics_history.csv src/metrics/metrics_history.csv || true
+          cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || echo "date,suite,metric,value" > src/metrics/metrics_history.csv
+          echo "PWD before rollup:" && pwd
+          echo "Root files:" && ls -l metrics_history.csv || true
+          echo "Src/metrics files:" && ls -l src/metrics/metrics_history.csv || true
 
       - name: Rollup
         env:
           SUITE: t1500
         run: |
           cd src/metrics
-          pwd
-          ls -l
+          echo "PWD in rollup:" && pwd && ls -l
           python rollup.py --history metrics_history.csv
 
       - name: Collect updated history
