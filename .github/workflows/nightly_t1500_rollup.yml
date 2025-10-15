@@ -1,4 +1,5 @@
 name: nightly_t1500_rollup
+
 on:
   workflow_run:
     workflows: ["nightly_t1500"]
@@ -9,8 +10,10 @@ jobs:
   rollup:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -37,20 +40,19 @@ jobs:
       - name: Prepare history for rollup
         run: |
           mkdir -p src/metrics
-          # кладём историю и в корень, и рядом со скриптом
-          cp artifacts/history/metrics_history.csv metrics_history.csv || echo "date,suite,metric,value" > metrics_history.csv
           cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || echo "date,suite,metric,value" > src/metrics/metrics_history.csv
           echo "PWD before rollup:" && pwd
           echo "Root files:" && ls -l metrics_history.csv || true
-          echo "Src/metrics files:" && ls -l src/metrics/metrics_history.csv || true
+          echo "Src/metrics files:" && ls -l src/metrics || true
 
       - name: Rollup
         env:
           SUITE: t1500
         run: |
+          mkdir -p artifacts/plots/t1500
           cd src/metrics
           echo "PWD in rollup:" && pwd && ls -l
-          python rollup.py --history metrics_history.csv
+          python rollup.py --history metrics_history.csv --outdir ../../artifacts/plots/t1500
 
       - name: Collect updated history
         run: |
