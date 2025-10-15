@@ -37,18 +37,24 @@ jobs:
       - name: Prepare history for rollup
         run: |
           mkdir -p src/metrics
-          cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || true
-          cp artifacts/history/metrics_history.csv metrics_history.csv || true
+          cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || echo "date,suite,metric,value" > src/metrics/metrics_history.csv
+          cp artifacts/history/metrics_history.csv metrics_history.csv || echo "date,suite,metric,value" > metrics_history.csv
+          echo "✅ history files ready:"
+          ls -l metrics_history.csv src/metrics/metrics_history.csv || true
 
       - name: Rollup
         env:
           SUITE: t1500
-        run: bash scripts/run_rollup.sh
+        run: |
+          cd src/metrics
+          pwd
+          ls -l
+          python rollup.py --history metrics_history.csv
 
       - name: Collect updated history
         run: |
           mkdir -p artifacts/history
-          if [ -f metrics_history.csv ]; then cp metrics_history.csv artifacts/history/metrics_history.csv; elif [ -f src/metrics/metrics_history.csv ]; then cp src/metrics/metrics_history.csv artifacts/history/metrics_history.csv; fi
+          cp src/metrics/metrics_history.csv artifacts/history/metrics_history.csv
 
       - name: Upload history
         uses: actions/upload-artifact@v4
