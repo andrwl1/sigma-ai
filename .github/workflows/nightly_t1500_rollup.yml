@@ -34,13 +34,10 @@ jobs:
           mkdir -p artifacts/history
           test -f artifacts/history/metrics_history.csv || echo "date,suite,metric,value" > artifacts/history/metrics_history.csv
 
-      - name: Prepare history path
+      - name: Prepare history for rollup
         run: |
-          if [ -f artifacts/history/metrics_history.csv ]; then
-            cp artifacts/history/metrics_history.csv metrics_history.csv
-          else
-            echo "date,suite,metric,value" > metrics_history.csv
-          fi
+          mkdir -p src/metrics
+          cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || echo "date,suite,metric,value" > src/metrics/metrics_history.csv
 
       - name: Rollup
         env:
