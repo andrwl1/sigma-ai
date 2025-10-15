@@ -4,6 +4,7 @@ on:
     workflows: ["nightly_t1500"]
     types: [completed]
   workflow_dispatch:
+
 jobs:
   rollup:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
@@ -32,6 +33,14 @@ jobs:
         run: |
           mkdir -p artifacts/history
           test -f artifacts/history/metrics_history.csv || echo "date,suite,metric,value" > artifacts/history/metrics_history.csv
+
+      - name: Prepare history path
+        run: |
+          if [ -f artifacts/history/metrics_history.csv ]; then
+            cp artifacts/history/metrics_history.csv metrics_history.csv
+          else
+            echo "date,suite,metric,value" > metrics_history.csv
+          fi
 
       - name: Rollup
         env:
