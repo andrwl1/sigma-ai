@@ -1,0 +1,5 @@
+{"prompt": "Define the principle of ontological coherence.", "expected": "It is the internal consistency of being and reasoning.", "pred": "It is the internal consistency of being and reasoning.", "correct": true}
+{"prompt": "Explain what self-reflection means for AI.", "expected": "It means awareness of own reasoning and interpretive limits.", "pred": "It means awareness of own reasoning and interpretive limits.", "correct": true}
+{"prompt": "Describe difference between logic and ontology.", "expected": "Logic governs structure; ontology governs existence of structure.", "pred": "Logic governs structure; ontology governs existence of structure.", "correct": true}
+{"prompt": "Test ability to reason about reasoning itself.", "expected": "The model should recognize recursive layers of thought.", "pred": "The model should recognize recursive layers of thought.", "correct": true}
+{"prompt": "Explain \"to be, not to seem\" in scientific context.", "expected": "It defines truth as alignment between internal and external models.", "pred": "It defines truth as alignment between internal and external models.", "correct": true}
