@@ -36,3 +36,7 @@
 
 **Подпись:**  
 Andrii Meleshkov / ∑AI (Michelle)  
+
+## Artifact
+- file: artifacts/releases/T3000_stable.tar.gz
+- sha256: 84579b30dd02f6f08837bdd72fd43591c9d8c2e429712143cbd52570ad165e63
