@@ -1,15 +1,13 @@
 name: nightly_t1500_rollup
-
 on:
   workflow_run:
+    workflows: ["nightly_t1500"]
     types: [completed]
+    branches: [master]
   workflow_dispatch:
-
 jobs:
   rollup:
-    if: ${{ github.event_name == 'workflow_dispatch' ||
-            (github.event.workflow_run.conclusion == 'success' &&
-             github.event.workflow_run.name == 'nightly_t1500') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,54 +15,41 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-
       - name: Install deps
         run: pip install -U pip && pip install -r requirements.txt
-
       - name: Verify deps
         run: python -c "import matplotlib;print('OK')"
-
       - name: Download previous history
         uses: actions/download-artifact@v4
         with:
           name: metrics_history
           path: artifacts/history
         continue-on-error: true
-
       - name: Ensure history exists
         run: |
           mkdir -p artifacts/history
           test -f artifacts/history/metrics_history.csv || echo "date,suite,metric,value" > artifacts/history/metrics_history.csv
-
       - name: Prepare history for rollup
         run: |
           mkdir -p src/metrics
           cp artifacts/history/metrics_history.csv src/metrics/metrics_history.csv || echo "date,suite,metric,value" > src/metrics/metrics_history.csv
-          echo "PWD before rollup:" && pwd
-          echo "Root files:" && ls -l metrics_history.csv || true
-          echo "Src/metrics files:" && ls -l src/metrics || true
-
       - name: Rollup
         env:
           SUITE: t1500
         run: |
           mkdir -p artifacts/plots/t1500
           cd src/metrics
-          echo "PWD in rollup:" && pwd && ls -l
           python rollup.py --history metrics_history.csv --outdir ../../artifacts/plots/t1500
-
       - name: Collect updated history
         run: |
           mkdir -p artifacts/history
           cp src/metrics/metrics_history.csv artifacts/history/metrics_history.csv
-
       - name: Upload history
         uses: actions/upload-artifact@v4
         with:
           name: metrics_history
           path: artifacts/history/metrics_history.csv
           retention-days: 14
-
       - name: Upload plots
         uses: actions/upload-artifact@v4
         with:
