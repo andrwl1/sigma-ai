@@ -1,14 +1,13 @@
 name: nightly_t3000
 on:
+  schedule:
+    - cron: '31 3 * * *'
   workflow_dispatch: {}
-
 permissions:
   contents: read
-
 concurrency:
   group: t3000-nightly-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   run:
     runs-on: ubuntu-latest
