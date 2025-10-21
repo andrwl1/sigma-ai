@@ -2,12 +2,12 @@
 set -euo pipefail
 PYTHON_BIN="${VIRTUAL_ENV:+$VIRTUAL_ENV/bin/python}"
 PYTHON_BIN="${PYTHON_BIN:-$(command -v python3)}"
-export PYTHONPATH="$(pwd)/scripts/python:$(pwd):${PYTHONPATH:-}"
+export PYTHONPATH="$(pwd):${PYTHONPATH:-}"
 TESTS_FILE="${1:-tests/t3000.tsv}"
 OUT_DIR="${2:-artifacts/t3000}"
 HIST_FILE="${3:-artifacts/metrics_history.csv}"
 mkdir -p "$OUT_DIR"
-"$PYTHON_BIN" -m sigma.eval.run --tests "$TESTS_FILE" --out "$OUT_DIR/results.jsonl"
+"$PYTHON_BIN" -m sigma_ai.eval.run --tests "$TESTS_FILE" --out "$OUT_DIR/results.jsonl"
 had_err=$?
 if [ $had_err -ne 0 ]; then exit $had_err; fi
 "$PYTHON_BIN" -m sigma.eval.metrics --pred "$OUT_DIR/results.jsonl" --out "$OUT_DIR/metrics.json"
