@@ -11,4 +11,4 @@ mkdir -p "$OUT_DIR"
 had_err=$?
 if [ $had_err -ne 0 ]; then exit $had_err; fi
 "$PYTHON_BIN" -m sigma_ai.eval.metrics --pred "$OUT_DIR/results.jsonl" --out "$OUT_DIR/metrics.json"
-"$PYTHON_BIN" -m sigma.eval.rollup --metrics "$OUT_DIR/metrics.json" --history "$HIST_FILE" --label "t3000_local"
+"$PYTHON_BIN" -m sigma_ai.eval.rollup --metrics "$OUT_DIR/metrics.json" --history "$HIST_FILE" --label "t3000_local"
