@@ -1,13 +1,24 @@
 import argparse, pathlib, sys, csv, datetime, json
 
-def _read_json(p):
-    with open(p, "r", encoding="utf-8") as f:
-        raw = f.read().strip()
+def _read_json(path):
+    with open(path, "r", encoding="utf-8") as f:
+        data = f.read().strip()
     try:
-        return json.loads(raw)
+        return json.loads(data)
     except json.JSONDecodeError:
-        lines = [ln for ln in raw.splitlines() if ln.strip()]
-        return json.loads(lines[-1])
+        objs = []
+        buf = ""
+        for line in data.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            buf += line
+            try:
+                objs.append(json.loads(buf))
+                buf = ""
+            except json.JSONDecodeError:
+                continue
+        return objs[-1] if objs else {}
 
 def main():
     p = argparse.ArgumentParser(add_help=False)
@@ -24,15 +35,12 @@ def main():
     if not metrics or not history:
         if len(args.pos) >= 2:
             inp = pathlib.Path(args.pos[0])
-            if str(inp).endswith(".json"):
-                metrics = str(inp)
-            else:
-                metrics = str(inp / "metrics.json")
+            metrics = str(inp if inp.suffix == ".json" else inp / "metrics.json")
             history = args.pos[1]
             if len(args.pos) >= 3:
                 trend_png = args.pos[2]
         else:
-            print("[rollup] need --metrics <json> and --history <csv> or positional <dir/json> <csv> [png]", file=sys.stderr)
+            print("[rollup] need --metrics <json> and --history <csv>", file=sys.stderr)
             return 2
 
     mpath = pathlib.Path(metrics)
@@ -45,19 +53,19 @@ def main():
     new = not hpath.exists()
     if new:
         with open(hpath, "w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f)
-            w.writerow(["timestamp","total","passed","failed","accuracy","metrics_path","label"])
+            csv.writer(f).writerow(["timestamp","total","passed","failed","accuracy","metrics_path","label"])
 
-    with open(mpath, "r", encoding="utf-8") as f:
-        d = _read_json(mpath)
+    d = _read_json(mpath)
     total = d.get("total") or d.get("n_total") or d.get("count") or 0
     passed = d.get("passed") or d.get("n_passed") or d.get("correct") or d.get("success") or 0
     failed = d.get("failed") or d.get("n_failed") or (total - passed if total else 0)
     acc = d.get("accuracy") or d.get("acc") or (passed/total if total else 0.0)
 
     with open(hpath, "a", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerow([datetime.datetime.utcnow().isoformat(timespec="seconds")+"Z", total, passed, failed, round(acc,6), str(mpath), args.label or ""])
+        csv.writer(f).writerow([
+            datetime.datetime.utcnow().isoformat(timespec="seconds")+"Z",
+            total, passed, failed, round(acc,6), str(mpath), args.label or ""
+        ])
 
     if trend_png:
         pathlib.Path(trend_png).parent.mkdir(parents=True, exist_ok=True)
