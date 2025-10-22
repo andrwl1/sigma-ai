@@ -4,7 +4,7 @@ input_dir="${1}"
 history="${2}"
 trend_png="${3:-artifacts/trend_drift_t3000.png}"
 
-python -m sigma.eval.rollup \
+python -m sigma_ai.eval.rollup \
   --metrics "${input_dir}/metrics.json" \
   --history "${history}" \
   --label "t3000_nightly"
