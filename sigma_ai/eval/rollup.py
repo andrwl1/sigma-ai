@@ -1,11 +1,19 @@
 import argparse, pathlib, sys, csv, datetime, json
 
+def _read_json(p):
+    with open(p, "r", encoding="utf-8") as f:
+        raw = f.read().strip()
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        lines = [ln for ln in raw.splitlines() if ln.strip()]
+        return json.loads(lines[-1])
+
 def main():
     p = argparse.ArgumentParser(add_help=False)
     p.add_argument("--metrics")
     p.add_argument("--history")
     p.add_argument("--label")
-    # Позиционный: <input_dir> <history_csv> [trend_png]
     p.add_argument("pos", nargs="*")
     args, _ = p.parse_known_args()
 
@@ -16,7 +24,7 @@ def main():
     if not metrics or not history:
         if len(args.pos) >= 2:
             inp = pathlib.Path(args.pos[0])
-            if inp.suffix == ".json":
+            if str(inp).endswith(".json"):
                 metrics = str(inp)
             else:
                 metrics = str(inp / "metrics.json")
@@ -41,16 +49,15 @@ def main():
             w.writerow(["timestamp","total","passed","failed","accuracy","metrics_path","label"])
 
     with open(mpath, "r", encoding="utf-8") as f:
-        d = json.load(f)
-    total  = d.get("total")  or d.get("n_total") or d.get("count")   or 0
+        d = _read_json(mpath)
+    total = d.get("total") or d.get("n_total") or d.get("count") or 0
     passed = d.get("passed") or d.get("n_passed") or d.get("correct") or d.get("success") or 0
     failed = d.get("failed") or d.get("n_failed") or (total - passed if total else 0)
-    acc    = d.get("accuracy") or d.get("acc") or (passed/total if total else 0.0)
+    acc = d.get("accuracy") or d.get("acc") or (passed/total if total else 0.0)
 
     with open(hpath, "a", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow([datetime.datetime.utcnow().isoformat(timespec="seconds")+"Z",
-                    total, passed, failed, round(acc,6), str(mpath), args.label or ""])
+        w.writerow([datetime.datetime.utcnow().isoformat(timespec="seconds")+"Z", total, passed, failed, round(acc,6), str(mpath), args.label or ""])
 
     if trend_png:
         pathlib.Path(trend_png).parent.mkdir(parents=True, exist_ok=True)
