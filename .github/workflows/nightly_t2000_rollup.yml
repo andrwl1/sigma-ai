@@ -10,6 +10,7 @@ jobs:
   rollup:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -21,7 +22,7 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install -U pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install -e .
 
       - name: Download T2000 artifacts from triggering run
@@ -45,7 +46,11 @@ jobs:
           test -f artifacts/metrics_history.csv || echo "date,suite,metric,value" > artifacts/metrics_history.csv
 
       - name: Run rollup
-        run: bash scripts/run_t2000_rollup.sh artifacts/t2000 artifacts/metrics_history.csv artifacts/trend_drift_t2000.png
+        run: |
+          python -m sigma_ai.eval.rollup \
+            --metrics artifacts/t2000/metrics.json \
+            --history artifacts/metrics_history.csv \
+            artifacts/trend_drift_t2000.png
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
