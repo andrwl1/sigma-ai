@@ -23,4 +23,8 @@ manifest.json
 
 sigma-ai/
 
-scripts/python/
+# allow release bundles
+!artifacts/
+!artifacts/releases/
+!artifacts/releases/*.tar.gz
+
