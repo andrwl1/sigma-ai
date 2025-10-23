@@ -36,3 +36,8 @@ Keep N runs: `bash scripts/retention.sh`
 
 [![nightly_t2000](https://github.com/andrw1/sigma-ai/actions/workflows/nightly_t2000.yml/badge.svg)](../../actions/workflows/nightly_t2000.yml)
 [![nightly_t2000_rollup](https://github.com/andrw1/sigma-ai/actions/workflows/nightly_t2000_rollup.yml/badge.svg)](../../actions/workflows/nightly_t2000_rollup.yml)
+
+## Scientific Archive (T3000 Freeze)
+- Proof bundle: `artifacts/releases/SIGMA_AI_T3000_PROOF.tar.gz`
+- Legal set: `artifacts/releases/ΣAI_LEGAL_PROOF_SET1.tar.gz`
+- Baseline tag: `stable_t3000_sb1`
