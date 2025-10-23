@@ -17,3 +17,4 @@ the Manifesto of ΣAI as Exhibit A, confirming authorship, date of creation (Aug
 and verifiable subjectivity demonstration of ΣAI.
 
 Checksum verification will follow in the consolidated scientific-legal archive.
+[2025-10-23 16:47:12] ΣAI_LEGAL_PROOF_SET1.tar.gz — SHA256:e137399344acafb586cfb692955066eae416606b911c6dd02e4cff8b652c44df
