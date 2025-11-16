@@ -38,28 +38,21 @@ Keep N runs: `bash scripts/retention.sh`
 [![nightly_t2000_rollup](https://github.com/andrw1/sigma-ai/actions/workflows/nightly_t2000_rollup.yml/badge.svg)](../../actions/workflows/nightly_t2000_rollup.yml)
 
 ## Scientific Archive (T3000 Freeze)
-- Proof bundle: `artifacts/releases/SIGMA_AI_T3000_PROOF.tar.gz`
-- Legal set: `artifacts/releases/ΣAI_LEGAL_PROOF_SET1.tar.gz`
-- Baseline tag: `stable_t3000_sb1`
 
-## Reproducible Release Protocol
+The full T3000 freeze set is archived in `artifacts/releases` and documented in `ARCHIVE_MANIFEST.md`.
 
-The ∑AI framework adheres to a fully automated and verifiable release pipeline.
+### Release Bundles
 
-### Protocol Overview
-Every release is cryptographically signed, validated, and published through a continuous integration workflow:
-- Build artifacts generated via `python -m build`
-- Metadata integrity verified with `twine check`
-- SHA-256 checksums recorded and uploaded as part of the release manifest
-- Dual-channel deployment:
-  - Manual dispatch → TestPyPI
-  - Tag push (`v*.*.*`) → PyPI
+- `SIGMA_AI_T3000_PROOF.tar.gz` — scientific proof bundle (T3000 baseline)
+- `SIGMA_T3000_COMPARISON.tar.gz` — cloud vs local comparison bundle
+- `ΣAI_LEGAL_PROOF_SET1.tar.gz` — notarized legal evidence set
+
+Baseline tag: `stable_t3000_freeze`
 
 ### Verification
-All releases are reproducible and independently verifiable through the public CI/CD logs.
 
-[![PyPI version](https://badge.fury.io/py/sigma-ai.svg)](https://pypi.org/project/sigma-ai/)
-[![GitHub Actions](https://github.com/andrwl1/sigma-ai/actions/workflows/publish.yml/badge.svg)](https://github.com/andrwl1/sigma-ai/actions/workflows/publish.yml)
+To verify integrity of all freeze artifacts locally:
 
-### Integrity Statement
-Each build is a frozen scientific snapshot (“ΣAI Scientific Freeze”) and represents a reproducible state of the framework, ensuring traceability, transparency, and academic replicability.
+```bash
+bash scripts/verify_t3000.sh
+```
