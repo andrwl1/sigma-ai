@@ -25,6 +25,7 @@ LIMIT=500 MODE=nightly bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
 - artifacts/summary/ab_diff.csv
 - artifacts/plots/ab_plot.png
 - artifacts/manifest.json
+
 ## Nightly usage
 Run nightly: `gh workflow run nightly.yml --ref master`
 Verify last run locally: `bash scripts/verify_t500.sh $(date +%F)`
@@ -39,20 +40,24 @@ Keep N runs: `bash scripts/retention.sh`
 
 ## Scientific Archive (T3000 Freeze)
 
-The full T3000 freeze set is archived in `artifacts/releases` and documented in `ARCHIVE_MANIFEST.md`.
+The ΣAI Scientific Archive contains the cryptographically-validated and reproducible evidence bundles for the T3000 baseline.
 
-### Release Bundles
+All artifacts are immutable, publicly verifiable, and referenced in the `ARCHIVE_MANIFEST.md` with SHA256 commitments.
+See: [ARCHIVE_MANIFEST.md](./ARCHIVE_MANIFEST.md)
 
-- `SIGMA_AI_T3000_PROOF.tar.gz` — scientific proof bundle (T3000 baseline)
-- `SIGMA_T3000_COMPARISON.tar.gz` — cloud vs local comparison bundle
-- `ΣAI_LEGAL_PROOF_SET1.tar.gz` — notarized legal evidence set
+### Included Bundles
 
-Baseline tag: `stable_t3000_freeze`
+| Artifact | Description |
+|---------|-------------|
+| **SIGMA_AI_T3000_PROOF.tar.gz** | Scientific proof bundle: logs, traces, freeze-snapshots, reproducibility outputs. |
+| **SIGMA_T3000_COMPARISON.tar.gz** | Cloud-vs-local replication: unified A/B diff CSV, metrics reconciliation, stability validation. |
+| **ΣAI_LEGAL_PROOF_SET1.tar.gz** | Notarized legal evidence set: affidavit, author claim, timestamps, SHA proofs. |
 
-### Verification
-
-To verify integrity of all freeze artifacts locally:
+### Hash Verification
 
 ```bash
-bash scripts/verify_t3000.sh
+shasum -a 256 artifacts/releases/SIGMA_AI_T3000_PROOF.tar.gz
+shasum -a 256 artifacts/releases/SIGMA_T3000_COMPARISON.tar.gz
+shasum -a 256 artifacts/releases/ΣAI_LEGAL_PROOF_SET1.tar.gz
+bash scripts/verify_t3000.sh $(date +%F)
 ```
