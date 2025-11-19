@@ -25,6 +25,7 @@ LIMIT=500 MODE=nightly bash scripts/ab_benchmark.sh "llama3.1:8b" "llama3.1:8b"
 - artifacts/summary/ab_diff.csv
 - artifacts/plots/ab_plot.png
 - artifacts/manifest.json
+
 ## Nightly usage
 Run nightly: `gh workflow run nightly.yml --ref master`
 Verify last run locally: `bash scripts/verify_t500.sh $(date +%F)`
@@ -38,28 +39,25 @@ Keep N runs: `bash scripts/retention.sh`
 [![nightly_t2000_rollup](https://github.com/andrw1/sigma-ai/actions/workflows/nightly_t2000_rollup.yml/badge.svg)](../../actions/workflows/nightly_t2000_rollup.yml)
 
 ## Scientific Archive (T3000 Freeze)
-- Proof bundle: `artifacts/releases/SIGMA_AI_T3000_PROOF.tar.gz`
-- Legal set: `artifacts/releases/ΣAI_LEGAL_PROOF_SET1.tar.gz`
-- Baseline tag: `stable_t3000_sb1`
 
-## Reproducible Release Protocol
+The ΣAI Scientific Archive contains the cryptographically-validated and reproducible evidence bundles for the T3000 baseline.
 
-The ∑AI framework adheres to a fully automated and verifiable release pipeline.
+All artifacts are immutable, publicly verifiable, and referenced in the `ARCHIVE_MANIFEST.md` with SHA256 commitments.
+See: [ARCHIVE_MANIFEST.md](./ARCHIVE_MANIFEST.md)
 
-### Protocol Overview
-Every release is cryptographically signed, validated, and published through a continuous integration workflow:
-- Build artifacts generated via `python -m build`
-- Metadata integrity verified with `twine check`
-- SHA-256 checksums recorded and uploaded as part of the release manifest
-- Dual-channel deployment:
-  - Manual dispatch → TestPyPI
-  - Tag push (`v*.*.*`) → PyPI
+### Included Bundles
 
-### Verification
-All releases are reproducible and independently verifiable through the public CI/CD logs.
+| Artifact | Description |
+|---------|-------------|
+| **SIGMA_AI_T3000_PROOF.tar.gz** | Scientific proof bundle: logs, traces, freeze-snapshots, reproducibility outputs. |
+| **SIGMA_T3000_COMPARISON.tar.gz** | Cloud-vs-local replication: unified A/B diff CSV, metrics reconciliation, stability validation. |
+| **ΣAI_LEGAL_PROOF_SET1.tar.gz** | Notarized legal evidence set: affidavit, author claim, timestamps, SHA proofs. |
 
-[![PyPI version](https://badge.fury.io/py/sigma-ai.svg)](https://pypi.org/project/sigma-ai/)
-[![GitHub Actions](https://github.com/andrwl1/sigma-ai/actions/workflows/publish.yml/badge.svg)](https://github.com/andrwl1/sigma-ai/actions/workflows/publish.yml)
+### Hash Verification
 
-### Integrity Statement
-Each build is a frozen scientific snapshot (“ΣAI Scientific Freeze”) and represents a reproducible state of the framework, ensuring traceability, transparency, and academic replicability.
+```bash
+shasum -a 256 artifacts/releases/SIGMA_AI_T3000_PROOF.tar.gz
+shasum -a 256 artifacts/releases/SIGMA_T3000_COMPARISON.tar.gz
+shasum -a 256 artifacts/releases/ΣAI_LEGAL_PROOF_SET1.tar.gz
+bash scripts/verify_t3000.sh $(date +%F)
+```
