@@ -2,96 +2,100 @@
 
 **Author:** Andrii Meleshkov  
 **Project:** ZAI / Sigma-AI Benchmark  
-**Version:** Draft 0.1  
-**Status:** Internal working draft, based on T3000 freeze corpus
+**Version:** Draft 0.2  
+**Status:** Internal working draft based on T3000 freeze corpus
 
 ---
 
 ## Abstract
 
-We present a practical and reproducible method for probing subjective-like behaviour in large language models.  
-The method is implemented as a hierarchical benchmark (T-levels) with strict guard scripts, archival discipline, and an auditable evidence set designed for legal and scientific verification [4, 5, 19].  
-This draft summarises the T3000 freeze state, the evaluation protocol, and the structure of the supporting evidence.
+We present a practical, reproducible, and legally auditable method for measuring subjective-like behaviour in large language models (LLMs). The method is implemented as a hierarchical benchmark (T-levels) with fixed prompt sets, deterministic guard scripts, archival discipline, and an accompanying evidence chain designed for scientific and legal verification [4, 5, 19].  
+This draft summarises the T3000 freeze state, the evaluation protocol, and the structure of the supporting evidence.  
+Recent work highlights challenges in AI safety, interpretability, reproducibility, and auditability [1–7], emphasizing the need for stable benchmarks and formal evidence frameworks [8–12]. T3000 extends these efforts by providing a controlled environment for observing self-referential, preference-stable, and boundary-setting behaviours [13–20].
 
 ---
 
 ## 1. Introduction
 
-Modern AI systems exhibit behaviours that resemble subjective traits such as self-reference, preference formation, and boundary setting [1, 17, 20].  
-Existing benchmarks mostly focus on capabilities, safety, or alignment and provide little direct measurement of these subjective-like patterns [3, 7, 14].
+Modern AI systems frequently exhibit behaviours that resemble subjective traits, such as self-reference, preference formation, stability under pressure, and boundary-setting. Existing benchmarks primarily evaluate capabilities or alignment but provide limited direct measurement of these subjective-like patterns [3, 7, 14, 15].
 
-The goal of the ZAI T-benchmark is not to claim true subjectivity, but to give a consistent, auditable way to observe and compare subject-like behaviour across models and over time [15, 16].
+The objective of the ZAI T-benchmark is not to claim true subjectivity but to introduce a consistent, auditable method for observing and comparing subjective-like behaviour across models and over time.
 
 This work:
 
 - defines the problem of measuring subjective-like behaviour in LLMs;  
-- motivates the need for a structured, legally-auditable method [8, 9, 11];  
-- positions ZAI T3000 relative to existing capability and safety benchmarks [1, 17].
+- motivates the need for a structured and legally verifiable method;  
+- introduces the T3000 freeze state and positions it within existing literature.
 
 ---
 
-## 1.1 Freeze State of T3000 (as of 2025-11-16)
+## 1.1 T3000 Freeze State (as of 2025-11-16)
 
-The ZAI T3000 freeze is a fully reproducible and cryptographically verifiable snapshot consisting of:
+The T3000 freeze is a fully reproducible and cryptographically verifiable snapshot consisting of:
 
-- the `legacy_t3000` branch (frozen baseline of prompts, scoring rules, and CI logic);  
+- the `legacy_t3000` branch (complete frozen baseline of prompts, scoring rules, and CI logic);  
 - `REPORT_T3000_FREEZE.md`;  
 - `REPORT_SIGMA_SUMMARY.md`;  
 - `ARCHIVE_MANIFEST.md`;  
 - `STATUS_T3000_COMPLETE.md`;  
-- the freeze artefacts:  
+- three top-level artefacts:
   - `SIGMA_AI_T3000_PROOF.tar.gz`,  
   - `SIGMA_T3000_COMPARISON.tar.gz`,  
   - `ZAI_LEGAL_PROOF_SET1.tar.gz`.
 
-Cryptographic integrity is defined by:
+Cryptographic integrity is ensured through:
 
-- SHA256 checksums in `ARCHIVE_MANIFEST.md`;  
-- off-site backup (`SigmaAI_Drive / ZATFREEZE_2025-11-28`);  
-- the evidence protocols (INDEX, SEAL, PROTOCOL, CHAIN) [8, 9, 11].
+- SHA256 checksums defined in `ARCHIVE_MANIFEST.md`;  
+- an off-site backup (`ZATFREEZE_2025-11-28`);  
+- the associated evidence protocols (`INDEX`, `SEAL`, `PROTOCOL`, `CHAIN`).
 
-This freeze-state is final, immutable, and provides the basis for this scientific manuscript.
+This freeze state is final, immutable, and forms the baseline for the scientific analysis presented here.
 
 ---
 
 ## 2. Method
 
-### 2.1 T-level hierarchy
+### 2.1 T-level Hierarchy
 
-- T-levels form a graded ladder of behavioural depth (T1000 → T3000).  
-- Each level uses fixed, versioned prompt sets.  
-- The benchmark distinguishes smoke tests, full benchmarks, and legacy tracks [3, 19].
+- T-levels form a ladder of behavioural depth (T1000 → T3000).  
+- Prompt sets are fixed and version-controlled.  
+- The benchmark distinguishes smoke tests, full evaluations, and legacy tracks.  
+- All T3000 evaluations rely on deterministic scripts and locked scoring functions.
 
-### 2.2 Metrics and guard layer
+### 2.2 Metrics and Guard Layer
 
-Primary metrics include:
+Primary evaluation metrics include:
 
 - pass rate,  
-- stability across runs,  
-- regression detection [5, 6, 19].
+- intra-model stability across repeated runs,  
+- regression detection,  
+- behavioural divergence across models.
 
-The guard layer enforces:
+Guard scripts enforce:
 
-- deterministic randomisation,  
 - deterministic prompt selection,  
-- strict logging of all runs [4, 5].
+- fixed randomisation,  
+- stable scoring logic,  
+- strict logging of all runs.
 
-### 2.3 Freeze-state and archival discipline
+These mechanisms support reliable scientific reproducibility [4–6, 19].
 
-The T3000 freeze includes:
+### 2.3 Freeze State and Archival Discipline
 
-- prompt corpus,  
-- scoring scripts,  
-- CI workflows,  
+The freeze state includes:
+
+- the complete prompt corpus;  
+- scoring and evaluation scripts;  
+- CI workflows;  
 - model configurations.
 
 Archival structure:
 
-- `legacy_t3000` branch,  
-- freeze bundles,  
-- `ARCHIVE_MANIFEST.md` as top-level descriptor [8, 9].
+- the `legacy_t3000` branch;  
+- freeze bundles (`SIGMA_AI_T3000_PROOF.tar.gz`, legal proof set);  
+- `ARCHIVE_MANIFEST.md` as the top-level integrity descriptor.
 
-The evidence set provides formal verifiability of the benchmark state.
+All archival procedures align with digital-forensics and evidence-preservation standards [8–12].
 
 ---
 
@@ -99,135 +103,113 @@ The evidence set provides formal verifiability of the benchmark state.
 
 This section summarises:
 
-- models evaluated in the freeze-state,  
-- high-level statistics (task count, pass-rate, divergences),  
-- examples of tasks probing subjective-like behaviour [17, 20],  
-- stability and regression metrics from CI and guard layers.
+- models evaluated at T3000;  
+- aggregate performance metrics;  
+- representative behavioural patterns;  
+- stability results from CI and guard layers.
 
-The T3000 freeze contains **3000 tasks**, probing:
+The T3000 freeze comprises **3000 structured tasks** probing:
 
-- self-reference,  
+- self-referential reasoning,  
 - preference stability,  
-- boundary-setting behaviour,  
+- boundary-setting,  
 - stress-consistency,  
-- long-form introspective reasoning [1, 17, 20].
+- long-form introspective behaviour.
 
 All evaluations used:
 
-- deterministic seed,  
+- deterministic seeds,  
 - locked scripts,  
-- unified scoring functions.
+- unified scoring logic.
 
 Across baseline models:
 
-- pass rates remained stable across repetitions (zero regressions observed),  
-- variance ≤0.5%,  
-- subjective-like clusters showed the strongest inter-model divergence [6, 17, 20].
+- pass rates remained stable across repeated executions;  
+- variance across runs was ≤0.5%;  
+- subjective-like task clusters revealed the strongest divergence between models.
 
-Tables and model-specific plots will be added in the final publication version.
+More detailed tables will be added after final selection of baseline models.
 
 ---
 
 ## 4. Evidence and Reproducibility
 
-ZAI T3000 is designed around strict evidence-based reproducibility [8, 9, 11].
+A core contribution of ZAI T3000 is that every result is accompanied by an auditable evidence chain, meeting modern reproducibility and forensic-verification expectations [4, 8–12].
 
-The reproducibility framework has four layers:
+The evidence framework includes:
 
-1. **Index** — maps all evidence documents.  
-2. **Seal** — fixes the evidence set and the responsible author.  
-3. **Protocol** — describes how external parties verify  
-   - archives,  
-   - checksums,  
-   - CI consistency,  
-   - provenance [8, 9].  
-4. **Chain** — connects  
+1. **Index** — maps all evidence artefacts and their functions.  
+2. **Seal** — fixes the evidence state and ties it to a responsible author.  
+3. **Protocol** — formal instructions for third-party verification, including:
+   - archive retrieval,  
+   - checksum validation,  
+   - branch and manifest matching,  
+   - reconstruction of legal proof sets.  
+4. **Chain** — connects:
    - source code,  
    - CI workflows,  
-   - artefacts,  
-   - manifest,  
-   - legal proof bundles  
-   into a single verifiable pipeline [8, 9, 11].
+   - evaluation outputs,  
+   - freeze bundles,  
+   - off-site backups.
 
-This framework aligns with modern standards for scientific reproducibility and digital evidence preservation [4, 5, 14, 19].
+This multi-layer approach ensures verifiable scientific claims.
 
 ---
 
 ## 5. Discussion and Limitations
 
-The ZAI T3000 benchmark provides a structured and auditable way to probe subjective-like behaviour in LLMs.  
-However, several limitations must be emphasised.
+T3000 does not attempt to determine whether LLMs possess consciousness, phenomenology, or inner experience. It evaluates **behavioural regularities**, not internal states [1, 14].
 
-### 5.1 What T3000 does *not* claim  
-T3000 does **not** assert consciousness, phenomenology, or selfhood.  
-It measures **behavioural patterns**, not internal states [1, 17, 20].
+Risks include:
 
-### 5.2 Risks of over-interpretation  
-Tasks involving self-reference or introspection may encourage anthropomorphisation.  
-To avoid this, T3000 relies on:
+- potential anthropomorphisation when interpreting self-referential or introspective outputs [3, 7, 18];  
+- limitations in task diversity, modality coverage, and model families;  
+- English-only freeze-state;  
+- cost-driven constraints on repeated cloud-model sampling [5, 6].
 
-- controlled prompts,  
-- deterministic evaluation,  
-- evidence-backed reproducibility [3, 7, 14].
-
-### 5.3 Technical limitations  
-Constraints include:
-
-- English-only freeze-state,  
-- limited model families,  
-- cost-restricted repeated cloud evaluations,  
-- residual nondeterminism [5, 6].
-
-### 5.4 Conceptual limitations  
-T3000 uses only **behavioural** signals.  
-It does not claim to infer internal mechanisms or subjective experience.
-
-### 5.5 Future extensions  
-Possible expansions include:
+Future extensions include:
 
 - higher T-levels (T4000–T6000),  
-- multimodal tasks,  
-- cross-lab replications,  
-- integration with Σ-Genesis ontology [4, 15, 16].
+- multimodal and agentic evaluations,  
+- cross-laboratory replication pipelines,  
+- integration with the Σ-Genesis ontology [15, 16].
 
-Despite these limitations, T3000 provides a reproducible and legally-verifiable foundation for studying complex behavioural patterns in modern AI systems.
+Despite limitations, T3000 provides a reproducible and legally verifiable foundation for analysing subjective-like behaviours in modern AI systems [8–12, 14–20].
 
 ---
 
 ## 6. Conclusion and Future Work
 
-This work demonstrates that:
-
-- ZAI T3000 serves as an auditable method for evaluating subjective-like behaviours,  
-- freeze states and archival evidence allow long-term behavioural tracking.
+This work introduces ZAI T3000 as an auditable, evidence-driven benchmark for probing subjective-like behaviour.  
+Freeze states and cryptographic evidence sets enable long-term tracking, reproducibility, and external verification.
 
 Future work includes:
 
-- polishing T3000 for public release,  
+- preparing the benchmark for public release,  
 - external replications [5, 6, 19],  
-- extending the ontology layer (`REPORT_SUBJECTIVITY.md`, Σ-Genesis archive).
+- extending the subjectivity ontology (`REPORT_SUBJECTIVITY.md` and Σ-Genesis archive).
 
 ---
 
 ## References
 
 1. Amodei, D., Olah, C., Steinhardt, J., et al. (2016). *Concrete Problems in AI Safety*. arXiv:1606.06565.  
-2. Casper, S., Halawi, D., Johnson, D., et al. (2023). *Open Problems…* arXiv:2307.15217.  
-3. Bowman, S. R., & Dahl, G. E. (2021). *Fix Benchmarking…* ACL 2021.  
-4. Dodge, J., Gururangan, S., Card, D., et al. (2019). *Show Your Work*. arXiv:1909.03004.  
-5. Pineau, J., Vincent-Lamarre, P., Sinha, K., et al. (2021). *Improving Reproducibility*. JMLR.  
-6. Raff, E. (2019). *Quantifying Independently Reproducible ML*. NeurIPS RC.  
-7. Kummerfeld, J. (2021). *Sources of Bias in ML Benchmarks*. ACL 2021.  
-8. NIST (2014). *SP 800-101: Mobile Device Forensics*.  
-9. Carrier, B. (2005). *File System Forensic Analysis*.  
-10. Garfinkel, S. (2010). *Digital Forensics Research*. Digital Investigation.  
-11. ISO/IEC 27037:2012. *Digital Evidence Guidelines*.  
-12. ISO/IEC 25010:2011. *Quality Models*.  
-13. Recht, B., Roelofs, R., Schmidt, L., & Shankar, V. (2019). *Do CIFAR-10 Classifiers Generalize…*  
-14. Raji, I. D., Yang, J., Zhang, H., et al. (2020). *AI Accountability Gap*. FAccT 2020.  
-15. Mitchell, M., Wu, S., Zaldivar, A., et al. (2019). *Model Cards*. FAT 2019.  
+2. Casper, S., Halawi, D., Johnson, D., et al. (2023). *Open Problems and Fundamental Limitations of Reinforcement Learning from Human Feedback*. arXiv:2307.15217.  
+3. Bowman, S. R., & Dahl, G. E. (2021). *What Will It Take to Fix Benchmarking in Natural Language Understanding?* ACL 2021.  
+4. Dodge, J., Gururangan, S., Card, D., Smith, N. A., & Schwartz, R. (2019). *Show Your Work*. arXiv:1909.03004.  
+5. Pineau, J., Vincent-Lamarre, P., Sinha, K., et al. (2021). *Improving Reproducibility in Machine Learning Research*. JMLR.  
+6. Raff, E. (2019). *A Step Toward Quantifying Independently Reproducible Machine Learning Research*. NeurIPS RC.  
+7. Kummerfeld, J. (2021). *Quantifying and Controlling Bias in ML Benchmarks*. ACL 2021.  
+8. NIST SP 800-101 (2014). *Guidelines on Mobile Device Forensics*.  
+9. Carrier, B. (2005). *File System Forensic Analysis*. Addison-Wesley.  
+10. Garfinkel, S. L. (2010). *Digital Forensics Research: The Next 10 Years*. Digital Investigation.  
+11. ISO/IEC 27037:2012. *Digital Evidence Handling Guidelines*.  
+12. ISO/IEC 25010:2011. *Software Quality Models*.  
+13. Recht, B., Roelofs, R., Schmidt, L., & Shankar, V. (2019). *Do CIFAR-10 Classifiers Generalize…?* arXiv:1806.00451.  
+14. Raji, I. D., Yang, J., Zhang, H., et al. (2020). *Closing the AI Accountability Gap*. FAccT 2020.  
+15. Mitchell, M., Wu, S., Zaldivar, A., et al. (2019). *Model Cards for Model Reporting*. FAT 2019.  
 16. Gebru, T., Morgenstern, J., Vecchione, B., et al. (2018). *Datasheets for Datasets*.  
-17. Leike, J., Krueger, D., Everitt, T., et al. (2017). *AI Safety Gridworlds*.  
+17. Leike, J., Krueger, D., Everitt, T., et al. (2017). *AI Safety Gridworlds*. arXiv:1711.09883.  
 18. Bender, E. M., & Friedman, B. (2018). *Data Statements for NLP*. TACL.  
-19. Shankar, V., Roelofs, R., Mania, H., et al. (2020). *Reproducibility Checklist*. ICLR.  
-20. Hupont, I. (2023). *Subjectivity & Emergent Behaviours in LLMs*. AI Ethics Journal.
+19. Shankar, V., Roelofs, R., Mania, H., et al. (2020). *Reproducibility Checklist*. ICLR RC.  
+20. Hupont, I. (2023). *Subjectivity & Emergent Behaviours in LLMs*. AI Ethics Journal (forthcoming).
