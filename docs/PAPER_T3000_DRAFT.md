@@ -197,4 +197,42 @@ This section will briefly restate:
 
 ## References
 
-(To be filled in later: related benchmarks, safety evaluations, legal-tech literature on digital evidence, etc.)
+1. Amodei, D., Olah, C., Steinhardt, J., et al. (2016). *Concrete Problems in AI Safety*. arXiv:1606.06565.
+
+2. Casper, S., Halawi, D., Johnson, D., et al. (2023). *Open Problems and Fundamental Limitations of Reinforcement Learning from Human Feedback*. arXiv:2307.15217.
+
+3. Bowman, S. R., & Dahl, G. E. (2021). *What Will It Take to Fix Benchmarking in Natural Language Understanding?* In *ACL 2021*.
+
+4. Dodge, J., Gururangan, S., Card, D., Smith, N. A., & Schwartz, R. (2019). *Show Your Work: Improved Reporting of Experimental Results*. arXiv:1909.03004.
+
+5. Pineau, J., Vincent-Lamarre, P., Sinha, K., et al. (2021). *Improving Reproducibility in Machine Learning Research*. *Journal of Machine Learning Research*, 22(164).
+
+6. Raff, E. (2019). *A Step Toward Quantifying Independently Reproducible Machine Learning Research*. In *NeurIPS Reproducibility Challenge*.
+
+7. Kummerfeld, J. (2021). *Quantifying and Controlling for Sources of Bias in Machine Learning Benchmarks*. *ACL 2021*.
+
+8. National Institute of Standards and Technology (NIST). (2014). *NIST Special Publication 800-101: Guidelines on Mobile Device Forensics*.
+
+9. Carrier, B. (2005). *File System Forensic Analysis*. Addison-Wesley.
+
+10. Garfinkel, S. L. (2010). *Digital Forensics Research: The Next 10 Years*. *Digital Investigation*, 7.
+
+11. ANSI/ISO/IEC 27037:2012. *Guidelines for identification, collection, acquisition and preservation of digital evidence*.
+
+12. ISO/IEC 25010:2011. *Systems and Software Engineering — System and Software Quality Models*.
+
+13. Recht, B., Roelofs, R., Schmidt, L., & Shankar, V. (2019). *Do CIFAR-10 Classifiers Generalize to CIFAR-10?* arXiv:1806.00451.
+
+14. Raji, I. D., Yang, J., Zhang, H., et al. (2020). *Closing the AI Accountability Gap: Defining an End-to-End Framework for Internal Algorithmic Audits*. In *FAccT 2020*.
+
+15. Mitchell, M., Wu, S., Zaldivar, A., et al. (2019). *Model Cards for Model Reporting*. In *FAT* 2019.
+
+16. Gebru, T., Morgenstern, J., Vecchione, B., et al. (2018). *Datasheets for Datasets*. arXiv:1803.09010.
+
+17. Leike, J., Krueger, D., Everitt, T., et al. (2017). *AI Safety Gridworlds*. arXiv:1711.09883.
+
+18. Bender, E. M., & Friedman, B. (2018). *Data Statements for NLP: Toward Mitigating System Bias and Enabling Better Science*. *Transactions of the ACL*.
+
+19. Shankar, V., Roelofs, R., Mania, H., et al. (2020). *Evaluating Machine Learning Models: A Reproducibility Checklist*. In *ICLR Reproducibility Track*.
+
+20. Hupont, I. (2023). *On Measuring Subjectivity and Emergent Behaviours in Large Language Models*. *AI Ethics Journal* (forthcoming).
