@@ -1,0 +1,127 @@
+\begin{thebibliography}{20}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[iso(2011)]{iso25010}
+Systems and software engineering -- system and software quality models, 2011.
+
+\bibitem[iso(2012)]{iso27037}
+Information technology -- security techniques -- guidelines for identification,
+  collection, acquisition and preservation of digital evidence, 2012.
+
+\bibitem[Amodei et~al.(2016)Amodei, Olah, Steinhardt,
+  et~al.]{amodei2016concrete}
+Dario Amodei, Chris Olah, Jacob Steinhardt, et~al.
+\newblock Concrete problems in ai safety.
+\newblock \emph{arXiv preprint arXiv:1606.06565}, 2016.
+
+\bibitem[Ayers et~al.(2014)Ayers, Brothers, and Jansen]{nist2014sp800101}
+Richard Ayers, Wayne Brothers, and Wayne Jansen.
+\newblock Guidelines on mobile device forensics.
+\newblock Technical Report NIST SP 800-101, National Institute of Standards and
+  Technology, 2014.
+
+\bibitem[Bender and Friedman(2018)]{bender2018datastatements}
+Emily~M Bender and Batya Friedman.
+\newblock Data statements for nlp: Toward mitigating system bias and enabling
+  better science.
+\newblock \emph{Transactions of the Association for Computational Linguistics},
+  2018.
+
+\bibitem[Bowman and Dahl(2021)]{bowman2021fix}
+Samuel~R Bowman and George~E Dahl.
+\newblock What will it take to fix benchmarking in natural language
+  understanding?
+\newblock In \emph{Proceedings of the 59th Annual Meeting of the Association
+  for Computational Linguistics}, 2021.
+
+\bibitem[Carrier(2005)]{carrier2005file}
+Brian Carrier.
+\newblock \emph{File System Forensic Analysis}.
+\newblock Addison-Wesley, 2005.
+
+\bibitem[Casper et~al.(2023)Casper, Halawi, Johnson, et~al.]{casper2023open}
+Stephen Casper, David Halawi, Dylan Johnson, et~al.
+\newblock Open problems and fundamental limitations of reinforcement learning
+  from human feedback.
+\newblock \emph{arXiv preprint arXiv:2307.15217}, 2023.
+
+\bibitem[Dodge et~al.(2019)Dodge, Gururangan, Card, Smith, and
+  Schwartz]{dodge2019show}
+Jesse Dodge, Suchin Gururangan, Dallas Card, Noah~A Smith, and Roy Schwartz.
+\newblock Show your work: Improved reporting of experimental results.
+\newblock \emph{arXiv preprint arXiv:1909.03004}, 2019.
+
+\bibitem[Garfinkel(2010)]{garfinkel2010digital}
+Simson~L Garfinkel.
+\newblock Digital forensics research: The next 10 years.
+\newblock \emph{Digital Investigation}, 7, 2010.
+
+\bibitem[Gebru et~al.(2018)Gebru, Morgenstern, Vecchione,
+  et~al.]{gebru2018datasheets}
+Timnit Gebru, Jamie Morgenstern, Briana Vecchione, et~al.
+\newblock Datasheets for datasets.
+\newblock \emph{arXiv preprint arXiv:1803.09010}, 2018.
+
+\bibitem[Hupont(2023)]{hupont2023subjectivity}
+Isabel Hupont.
+\newblock On measuring subjectivity and emergent behaviours in large language
+  models.
+\newblock \emph{AI Ethics Journal}, 2023.
+\newblock Forthcoming.
+
+\bibitem[Kummerfeld(2021)]{kummerfeld2021quantifying}
+Jonathan Kummerfeld.
+\newblock Quantifying and controlling for sources of bias in machine learning
+  benchmarks.
+\newblock In \emph{Proceedings of the 59th Annual Meeting of the Association
+  for Computational Linguistics}, 2021.
+
+\bibitem[Leike et~al.(2017)Leike, Krueger, Everitt,
+  et~al.]{leike2017aisafetygridworlds}
+Jan Leike, David Krueger, Tom Everitt, et~al.
+\newblock Ai safety gridworlds.
+\newblock \emph{arXiv preprint arXiv:1711.09883}, 2017.
+
+\bibitem[Mitchell et~al.(2019)Mitchell, Wu, Zaldivar,
+  et~al.]{mitchell2019modelcards}
+Margaret Mitchell, Simone Wu, Andrew Zaldivar, et~al.
+\newblock Model cards for model reporting.
+\newblock In \emph{Proceedings of the Conference on Fairness, Accountability,
+  and Transparency}, 2019.
+
+\bibitem[Pineau et~al.(2021)Pineau, Vincent-Lamarre, Sinha,
+  et~al.]{pineau2021improving}
+Joelle Pineau, Philippe Vincent-Lamarre, Kush Sinha, et~al.
+\newblock Improving reproducibility in machine learning research.
+\newblock \emph{Journal of Machine Learning Research}, 22\penalty0 (164), 2021.
+
+\bibitem[Raff(2019)]{raff2019step}
+Edward Raff.
+\newblock A step toward quantifying independently reproducible machine learning
+  research.
+\newblock In \emph{NeurIPS Reproducibility Challenge}, 2019.
+
+\bibitem[Raji et~al.(2020)Raji, Yang, Zhang, et~al.]{rajietal2020closing}
+Inioluwa~Deborah Raji, Jingying Yang, Hoda Zhang, et~al.
+\newblock Closing the ai accountability gap: Defining an end-to-end framework
+  for internal algorithmic audits.
+\newblock In \emph{Proceedings of the 2020 Conference on Fairness,
+  Accountability, and Transparency (FAccT)}, 2020.
+
+\bibitem[Recht et~al.(2019)Recht, Roelofs, Schmidt, and
+  Shankar]{recht2019cifar10}
+Benjamin Recht, Rebecca Roelofs, Ludwig Schmidt, and Vaishaal Shankar.
+\newblock Do cifar-10 classifiers generalize to cifar-10?
+\newblock \emph{arXiv preprint arXiv:1806.00451}, 2019.
+
+\bibitem[Shankar et~al.(2020)Shankar, Roelofs, Mania,
+  et~al.]{shankar2020reprochecklist}
+Vaishaal Shankar, Rebecca Roelofs, Horia Mania, et~al.
+\newblock Evaluating machine learning models: A reproducibility checklist.
+\newblock In \emph{ICLR Reproducibility Challenge}, 2020.
+
+\end{thebibliography}

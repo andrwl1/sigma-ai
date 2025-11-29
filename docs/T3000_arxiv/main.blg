@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--entry type for "iso27037" isn't style-file defined
+--line 75 of file references.bib
+Warning--entry type for "iso25010" isn't style-file defined
+--line 81 of file references.bib
+Warning--to sort, need author or key in iso27037
+Warning--to sort, need author or key in iso25010
+You've used 20 entries,
+            2773 wiz_defined-function locations,
+            686 strings with 8100 characters,
+and the built_in function-call counts, 7896 in all, are:
+= -- 636
+> -- 513
+< -- 8
++ -- 179
+- -- 159
+* -- 587
+:= -- 1245
+add.period$ -- 57
+call.type$ -- 20
+change.case$ -- 104
+chr.to.int$ -- 20
+cite$ -- 44
+duplicate$ -- 405
+empty$ -- 678
+format.name$ -- 181
+if$ -- 1642
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 18
+newline$ -- 105
+num.names$ -- 72
+pop$ -- 250
+preamble$ -- 1
+purify$ -- 85
+quote$ -- 0
+skip$ -- 301
+stack$ -- 0
+substring$ -- 42
+swap$ -- 26
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 215
+warning$ -- 2
+while$ -- 54
+width$ -- 0
+write$ -- 244
+(There were 4 warnings)

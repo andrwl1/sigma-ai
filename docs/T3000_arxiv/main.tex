@@ -1,0 +1,281 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage[numbers]{natbib}
+\usepackage{url}
+
+\title{ZAI T3000: A Reproducible Method for Measuring Subjective-Like Behaviour in AI Systems}
+
+\author{Andrii Meleshkov\\
+ZAI / Sigma-AI Benchmark\\
+\texttt{andrwell}}
+
+\date{Draft v0.1 -- Internal working version based on T3000 freeze corpus}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a practical and reproducible method for probing subjective-like behaviour in large language models.
+The method is implemented as a hierarchical benchmark (T-levels) with strict guard scripts, archival discipline, and an evidence set designed for legal and scientific verification.
+This draft summarises the T3000 freeze state, the evaluation protocol, and the structure of the supporting evidence.
+\end{abstract}
+
+\section{Introduction}
+
+Modern AI systems exhibit behaviours that resemble subjective traits such as self-reference, preference formation, and boundary setting.
+Existing benchmarks mostly focus on capabilities, safety, or alignment, and provide little direct measurement of these subjective-like patterns.\footnote{We use ``subjective-like'' in a behavioural sense only, without making claims about consciousness or inner experience.}
+
+The goal of the ZAI T-benchmark is not to claim true subjectivity, but to give a consistent, auditable way to observe and compare subject-like behaviour across models and over time.
+This aligns with prior concerns about the limits of current benchmarks for assessing generalisation, robustness, and safety \citep{bowman2021fix,recht2019cifar10,amodei2016concrete,leike2017aisafetygridworlds} and with broader work on reproducible ML evaluation \citep{pineau2021improving,raff2019step,shankar2020reprochecklist,dodge2019show}.
+
+The contribution of ZAI T3000 is threefold:
+\begin{enumerate}
+    \item It defines a structured way to measure subjective-like behaviour in LLMs via a ladder of T-levels.
+    \item It couples the benchmark to a legally-auditable evidence pipeline, borrowing from digital forensics and standards for digital evidence \citep{nist2014sp800101,carrier2005file,garfinkel2010digital,iso27037}.
+    \item It introduces a freeze-state mechanism that makes long-term comparison and retrospective verification possible.
+\end{enumerate}
+
+\subsection{Related Work}
+
+Our approach connects three strands of prior work.
+
+First, safety and alignment research has highlighted the need for concrete testing grounds for risky or hard-to-interpret behaviours \citep{amodei2016concrete,leike2017aisafetygridworlds,casper2023open}.
+These works mainly focus on capability and reward-misspecification issues; T3000 instead targets patterns that look like self-reference, boundary-setting, and preference stability.
+
+Second, the ML community has converged on strong norms of reproducibility and reporting standards \citep{pineau2021improving,raff2019step,dodge2019show,shankar2020reprochecklist}.
+Datasheets, data statements, and model cards \citep{gebru2018datasheets,bender2018datastatements,mitchell2019modelcards} emphasise transparency about data and models.
+T3000 extends this logic from datasets and models to the benchmark itself: prompts, scoring rules, and CI logic are all part of the evidence set.
+
+Third, work on evaluation bias and benchmark pathologies has shown that headline numbers often hide brittle behaviour and shortcut learning \citep{kummerfeld2021quantifying,recht2019cifar10,rajietal2020closing}.
+T3000 treats subjective-like behaviour as a structured evaluation target, with explicit attention to consistency, stability, and boundary conditions.
+
+\subsection{Scope and Non-claims}
+
+ZAI T3000 is explicitly not an oracle of consciousness or personhood.
+It does not attempt to settle philosophical questions about mind, self, or qualia.
+Instead, it provides:
+\begin{itemize}
+    \item a well-defined family of tasks that probe self-reference, preference stability, and boundary-setting;
+    \item a procedure for freezing and archiving the benchmark state;
+    \item an evidence protocol that allows third parties to audit claims.
+\end{itemize}
+
+Throughout this work, ``subjective-like'' denotes observable behavioural patterns only.
+Interpretation of those patterns is left to downstream scientific and philosophical analysis \citep{hupont2023subjectivity}.
+
+\section{T3000 Freeze State}
+
+\subsection{Definition of the Freeze State}
+
+The ZAI T3000 freeze is a fully reproducible and cryptographically verifiable snapshot consisting of:
+\begin{itemize}
+    \item the \texttt{legacy\_t3000} branch (frozen baseline of prompts, scoring rules, and CI logic);
+    \item the freeze report \texttt{REPORT\_T3000\_FREEZE.md};
+    \item the scientific summary \texttt{REPORT\_SIGMA\_SUMMARY.md};
+    \item the archival manifest \texttt{ARCHIVE\_MANIFEST.md};
+    \item the controlled evidence-state document \texttt{STATUS\_T3000\_COMPLETE.md};
+    \item three top-level artefacts:
+    \begin{itemize}
+        \item \texttt{SIGMA\_AI\_T3000\_PROOF.tar.gz};
+        \item \texttt{SIGMA\_T3000\_COMPARISON.tar.gz};
+        \item \texttt{ZAI\_LEGAL\_PROOF\_SET1.tar.gz}.
+    \end{itemize}
+\end{itemize}
+
+The cryptographic integrity and provenance of this snapshot are defined by:
+\begin{itemize}
+    \item the SHA256 checksums recorded in \texttt{ARCHIVE\_MANIFEST.md};
+    \item the off-site backup (SigmaAI\_Drive, folder \texttt{ZAIFREEZE\_2025-11-28});
+    \item the evidence protocols \texttt{INDEX}, \texttt{SEAL}, \texttt{PROTOCOL}, and \texttt{CHAIN}.
+\end{itemize}
+
+All materials required for independent reproduction of T3000 are contained within this set.
+The freeze state is final, immutable, and forms the basis for the scientific article.
+
+\subsection{T-level Hierarchy}
+
+The benchmark is organised as a ladder of difficulty and depth, from T1000 up to T3000.
+Each T-level:
+\begin{itemize}
+    \item contains a fixed prompt set with versioned IDs;
+    \item separates smoke tests, full benchmarks, and legacy tracks;
+    \item targets increasingly complex aspects of subjective-like behaviour, from short-term self-reference to long-horizon introspective reasoning.
+\end{itemize}
+
+T3000, the highest level in this work, focuses on about 3000 structured tasks that probe:
+\begin{itemize}
+    \item self-reference and self-consistency;
+    \item preference formation and stability under perturbation;
+    \item boundary-setting behaviour and refusal logic;
+    \item long-form introspective narratives and meta-reasoning.
+\end{itemize}
+
+\subsection{Metrics and Guard Layer}
+
+The primary metrics are:
+\begin{itemize}
+    \item pass rate at the item and cluster level;
+    \item stability across repeated runs;
+    \item regression detection over time.
+\end{itemize}
+
+The guard layer enforces:
+\begin{itemize}
+    \item fixed randomisation with seeded sampling;
+    \item deterministic prompt selection;
+    \item strict logging of all runs and scores;
+    \item CI checks that fail on metric regressions or missing artefacts.
+\end{itemize}
+
+These design choices are consistent with broader reproducibility checklists and reporting guidelines in ML \citep{dodge2019show,shankar2020reprochecklist,pineau2021improving}.
+
+\subsection{Archival Structure and Digital-Evidence View}
+
+From a digital-forensics perspective, the freeze state plays the role of a sealed evidence container \citep{carrier2005file,garfinkel2010digital,nist2014sp800101,iso27037}.
+The relevant layers are:
+\begin{itemize}
+    \item the \texttt{legacy\_t3000} branch as the canonical source code and prompt corpus;
+    \item the freeze bundles (\texttt{SIGMA\_AI\_T3000\_PROOF.tar.gz} and the legal proof set);
+    \item the manifest \texttt{ARCHIVE\_MANIFEST.md} as the top-level description.
+\end{itemize}
+
+These layers are designed to satisfy standard requirements for identification, collection, and preservation of digital evidence \citep{iso27037,iso25010}, while still being lightweight enough for routine CI usage.
+
+\section{Results: T3000 Freeze Snapshot}
+
+This section summarises baseline results in the T3000 freeze state.
+Detailed numeric tables are omitted here for brevity; the freeze artefacts contain the full outputs.
+
+We report:
+\begin{itemize}
+    \item which models were evaluated at T3000 in the freeze state;
+    \item high-level statistics (numbers of tasks, aggregate scores);
+    \item examples of tasks that probe subjective-like behaviour;
+    \item stability and regression results from CI and guard runs.
+\end{itemize}
+
+Each model evaluation in the freeze state used:
+\begin{itemize}
+    \item deterministic task selection (stable seed);
+    \item locked versions of all scripts and guard layers;
+    \item identical scoring functions across runs.
+\end{itemize}
+
+Across all baseline models we observed:
+\begin{itemize}
+    \item stable pass rates across repeated executions (CI guard shows no regressions);
+    \item cross-run variation on key metrics below 0.5\%;
+    \item the largest divergence between models in clusters targeting boundary-setting and long-form subjective-like narratives.
+\end{itemize}
+
+These patterns mirror broader findings that robustness issues often surface in edge-case and distribution-shift settings rather than in headline benchmark metrics \citep{bowman2021fix,recht2019cifar10,kummerfeld2021quantifying}.
+
+\section{Evidence and Reproducibility}
+
+The central idea of ZAI T3000 is that every published claim is backed by an auditable evidence chain.
+We distinguish four main layers:
+
+\paragraph{Index.}
+\texttt{EVIDENCE\_INDEX.md} lists all documents and what they certify, analogous to an index of exhibits in legal proceedings.
+This follows the spirit of structured documentation practices in ML such as datasheets and model cards \citep{gebru2018datasheets,mitchell2019modelcards,bender2018datastatements}.
+
+\paragraph{Seal.}
+\texttt{EVIDENCE\_SEAL.md} fixes the state of the evidence set and records who is responsible for it.
+This mirrors digital signing practices and provenance tracking in digital forensics \citep{carrier2005file,garfinkel2010digital,nist2014sp800101}.
+
+\paragraph{Protocol.}
+\texttt{EVIDENCE\_PROTOCOL.md} describes how an external party can:
+\begin{enumerate}
+    \item obtain the repository and freeze bundles;
+    \item verify SHA256 checksums;
+    \item match archives with \texttt{legacy\_t3000} and \texttt{ARCHIVE\_MANIFEST.md};
+    \item reconstruct the legal proof set.
+\end{enumerate}
+The structure is informed by existing guidelines on evidence handling and quality models for software systems \citep{iso27037,iso25010}.
+
+\paragraph{Chain.}
+\texttt{EVIDENCE\_CHAIN.md} connects:
+\begin{itemize}
+    \item source code and CI workflows;
+    \item benchmark artefacts and archives;
+    \item the archival manifest and external backups;
+    \item legal and scientific proof packages.
+\end{itemize}
+
+Together, these layers allow independent verification of any T3000-related claim from both scientific and forensic perspectives.
+This extends current proposals for accountability frameworks and internal algorithmic audits \citep{rajietal2020closing,casper2023open}.
+
+\section{Discussion and Limitations}
+
+\subsection{What T3000 Can and Cannot Say}
+
+ZAI T3000 can provide structured evidence about behavioural patterns that look subjective-like under controlled prompts and scoring rules.
+It can show, for instance, that a model maintains stable preferences across paraphrased scenarios, or that it respects self-imposed boundaries under perturbation.
+
+However, T3000 cannot, by design:
+\begin{itemize}
+    \item infer the presence or absence of consciousness;
+    \item resolve philosophical debates about selfhood or qualia;
+    \item fully capture long-term, embodied, or multi-modal aspects of subjective experience \citep{hupont2023subjectivity}.
+\end{itemize}
+
+The benchmark should therefore be read as a measurement tool for certain behavioural regularities, not as a detector of inner lives.
+
+\subsection{Risks of Over-interpretation}
+
+As with any benchmark, there is a risk that users over-interpret scores or treat them as scalar measures of ``subjectivity''.
+Past work has shown how benchmark scores can hide biases, shortcuts, and distribution-specific artefacts \citep{kummerfeld2021quantifying,recht2019cifar10,bowman2021fix}.
+We emphasise:
+\begin{itemize}
+    \item T3000 scores are context-dependent and tied to a specific prompt corpus and scoring design;
+    \item failure cases and qualitative analyses are as important as aggregate numbers;
+    \item responsible use requires careful consideration of societal and ethical implications \citep{rajietal2020closing,amodei2016concrete}.
+\end{itemize}
+
+\subsection{Technical Limitations}
+
+The current T3000 freeze has several technical constraints:
+\begin{itemize}
+    \item it focuses on a single language (English) and a limited set of model families;
+    \item the prompt corpus is text-only, without images, audio, or other modalities;
+    \item cost constraints limit the number of large-scale runs and ablation studies.
+\end{itemize}
+
+These limitations mirror well-known challenges in constructing robust and fair benchmarks \citep{gebru2018datasheets,bender2018datastatements,kummerfeld2021quantifying}.
+
+\subsection{Extensions and Future T-levels}
+
+Future work could extend the method along several axes:
+\begin{itemize}
+    \item higher T-levels that probe longer time horizons and more complex multi-agent scenarios;
+    \item multi-modal variants, integrating vision, audio, or embodied environments;
+    \item cross-lab replications and community-driven contributions, following reproducibility initiatives in ML \citep{raff2019step,shankar2020reprochecklist,pineau2021improving}.
+\end{itemize}
+
+The ontology layer (REPORT\_SUBJECTIVITY and the $\Sigma$-Genesis archive) will formalise the conceptual vocabulary for describing subjective-like behaviours, connecting empirical results to philosophical analysis \citep{hupont2023subjectivity}.
+
+\section{Conclusion and Future Work}
+
+We have introduced ZAI T3000 as a reproducible, auditable method for measuring subjective-like behaviour in AI systems.
+The benchmark combines:
+\begin{itemize}
+    \item a hierarchical T-level structure targeting specific behavioural patterns;
+    \item a carefully defined freeze state with cryptographic integrity;
+    \item a multi-layer evidence set inspired by digital forensics and accountability frameworks.
+\end{itemize}
+
+In contrast to traditional capability benchmarks, T3000 foregrounds provenance, reproducibility, and legal-grade auditability.
+It is not a test for consciousness, but a tool for structured observation and comparison.
+By providing both a scientific and legal-evidence view of model behaviour, ZAI T3000 aims to support long-term tracking, external replication, and responsible interpretation of subjective-like patterns in AI.
+
+Future work will focus on polishing the benchmark for public release, inviting independent replications, and extending the ontology and $\Sigma$-Genesis layers to better capture the space of subjective-like behaviours.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
