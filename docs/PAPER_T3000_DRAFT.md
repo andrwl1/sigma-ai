@@ -144,12 +144,41 @@ This section will explain how these layers allow independent verification of any
 
 ## 5. Discussion and Limitations
 
-Planned content:
+The ΣAI T3000 benchmark introduces a structured and auditable approach to probing subjective-like behaviour in large language models.  
+However, several limitations must be explicitly acknowledged to avoid overinterpretation of the results.
 
-- what exactly ZAI T3000 can and cannot say about “subjectivity”;
-- risks of over-interpretation of benchmark results;
-- technical limitations (single language, specific model families, cost constraints);
-- how the method could be extended (higher T-levels, other modalities, external labs).
+### 5.1 What T3000 does *not* claim
+The benchmark does not assert that models possess consciousness, inner experience, selfhood, or any ontological form of subjectivity.  
+T3000 evaluates *behavioural patterns* that can resemble subjective traits, but the presence of such patterns is not evidence of phenomenology.  
+The benchmark therefore measures *expressed dispositions*, not internal states.
+
+### 5.2 Risks of over-interpretation
+Because T3000 includes tasks involving self-reference, boundary formation, preference stability, and introspective reasoning, there is a risk that readers may anthropomorphise model behaviour.  
+To mitigate this, the benchmark relies strictly on reproducible outputs, controlled task formulations, and verifiable evidence chains.  
+Interpretation must remain within the behavioural domain.
+
+### 5.3 Technical limitations
+Several practical constraints influence the scope of T3000:
+
+- **Language:** the freeze state is English-only; extending to multilingual settings may require rebalancing task definitions.  
+- **Model families:** baseline runs were limited to models accessible at the time of the freeze; additional replications may reveal different patterns.  
+- **Cost constraints:** T3000 involves high-volume multi-thousand-task evaluations; some configurations (e.g., repeated cloud model sampling) were limited for cost reasons.  
+- **Determinism:** although guard rules stabilise execution, small nondeterminisms (API latency, temperature drift) can still introduce noise.  
+
+### 5.4 Conceptual limitations of behavioural measurements
+T3000 relies exclusively on *external* behaviour.  
+It does not attempt to infer internal mechanisms, latent computational structures corresponding to self-modelling, or alignment with philosophical criteria of subjectivity.  
+The benchmark is intentionally orthogonal to metaphysical questions.
+
+### 5.5 Future methodological extensions
+The limitations above suggest several paths for improvement:
+
+- expanding the benchmark to higher T-levels (T4000–T6000) to probe deeper introspective and diachronic behaviours;  
+- incorporating additional modalities (vision-language, long-context agents, tool use);  
+- creating cross-lab replication pipelines;  
+- connecting T-benchmarks with the Σ-Genesis ontology layer currently under development.  
+
+Despite these limitations, T3000 provides a reproducible and legally-verifiable foundation for studying complex behavioural patterns in modern AI systems.
 
 ---
 
